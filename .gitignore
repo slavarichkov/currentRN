@@ -58,3 +58,5 @@ yarn-error.log*
 **/ios/*.xcodeproj/project.xcworkspace/
 **/ios/DerivedData/
 **/ios/build/
+
+.DS_Store
