@@ -32,9 +32,18 @@ interface Translates {
 const translates: Translates = {
     ru: {
         hello: 'привет',
+        nameMainScren: 'Счетчики',
+        hotWater: 'Горячая вода',
+        coldWater: 'Холодная вода',
+        placeHolderInputCouner: 'Введите показания',
+        send: 'Отправить',
+        save: 'Сохранить',
+        validMessageValues: 'Пропущено одно из полей',
+        validMessageRegex: 'Пожалуйста, проверьте символы - допустимы цифры и ,.',
     },
     en: {
         hello: 'hello',
+        nameMainScren: 'Counters',
     }
 }
 

@@ -14,14 +14,23 @@ import { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+//Контекст
+import { useTranslate } from '../../contexts/translate/TranslateContext';
 
-import CountersScreen from '../../screens/counters/CountersScreen';
+import imgHome from '../../../images/home-1-svgrepo-com.png';
+import imgAccount from '../../../images/personal.png';
+import imgInfo from '../../../images/info-svgrepo-com.png';
+import imgChat from '../../../images/list-center-svgrepo-com.png';
+
+import CountersNavigator from '../CountersNavigator';
 
 function Main() {
 
     const Tab = createBottomTabNavigator();
     const screenWidth = Dimensions.get('window').width;
     const insets = useSafeAreaInsets();
+    //Перевод
+    const { selectedTranslations } = useTranslate();
 
     return (
         <View style={styles.container}>
@@ -41,8 +50,7 @@ function Main() {
                         borderTopWidth: 0, // Устанавливаем толщину верхней границы в 0, чтобы убрать рамку
                         elevation: 0, // Устанавливаем тень в 0, чтобы убрать тень (для Android)
                     },
-                    //tabBarActiveTintColor: activeTintColor,
-                    //showLabel: true,
+                    tabBarActiveTintColor: '#000000',
                     tabBarBackground: () => (
                         <BlurView blurType={'light'}
                             blurAmount={10}
@@ -55,27 +63,61 @@ function Main() {
                             }} />
                     ),
                 }}
-            //tabBarShowIcon={true}
-            // options={{
-            //     tabBarLabel: () => null, // или tabBarLabel: () => '',
-            // }}
-            // bounces={false}
             >
                 <Tab.Screen
                     name="CountersScreen"
-                    component={CountersScreen}
+                    component={CountersNavigator}
                     options={{
-                        //id: 'countersscreen',
-                        tabBarLabel: 'CountersScreen',
+                        tabBarLabel: selectedTranslations.nameMainScren,
                         tabBarIcon: ({ color }) => (
                             <Image
-                                //source={imgButtonHome}
-                                style={{ width: 29, height: 29, tintColor: color }}
+                                source={imgHome}
+                                style={{ width: 29, height: 29, tintColor: 'rgba(0,0,0,0.5)' }}
                             />
                         ),
                         headerShown: false, // Полностью скрыть верхний заголовок экрана
-                        //animationTypeForReplace: 'push', // Тип анимации при замене экрана
-                        //animationTypeForPush: 'push', // Тип анимации при переходе на этот экран
+                    }}
+                />
+                <Tab.Screen
+                    name="CountersScreen2"
+                    component={CountersNavigator}
+                    options={{
+                        tabBarLabel: selectedTranslations.nameMainScren,
+                        tabBarIcon: ({ color }) => (
+                            <Image
+                                source={imgAccount}
+                                style={{ width: 29, height: 29, tintColor: 'rgba(0,0,0,0.5)' }}
+                            />
+                        ),
+                        headerShown: false, // Полностью скрыть верхний заголовок экрана
+                    }}
+                />
+                <Tab.Screen
+                    name="CountersScreen3"
+                    component={CountersNavigator}
+                    options={{
+                        tabBarLabel: selectedTranslations.nameMainScren,
+                        tabBarIcon: ({ color }) => (
+                            <Image
+                                source={imgChat}
+                                style={{ width: 29, height: 29, tintColor: 'rgba(0,0,0,0.5)' }}
+                            />
+                        ),
+                        headerShown: false, // Полностью скрыть верхний заголовок экрана
+                    }}
+                />
+                <Tab.Screen
+                    name="CountersScreen4"
+                    component={CountersNavigator}
+                    options={{
+                        tabBarLabel: selectedTranslations.nameMainScren,
+                        tabBarIcon: ({ color }) => (
+                            <Image
+                                source={imgInfo}
+                                style={{ width: 29, height: 29, tintColor: 'rgba(0,0,0,0.5)' }}
+                            />
+                        ),
+                        headerShown: false, // Полностью скрыть верхний заголовок экрана
                     }}
                 />
             </Tab.Navigator>
@@ -88,6 +130,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
+        paddingTop: 50,
     }
 });
 

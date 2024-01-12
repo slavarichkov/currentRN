@@ -9,6 +9,7 @@ interface LocalizationItem {
     locale: string;
 }
 
+/** список локализаций для поиска в виде ключ - значения */
 const arrayLocalizations: LocalizationItem[] = [
     { key: 'ru', locale: 'ru' },
     { key: 'en', locale: 'en' },
@@ -69,7 +70,7 @@ async function getTranslation(): Promise<TypeTranslateObject> {
         }
 
         const translate: TypeTranslateObject = translates[translateLocale];
-
+        console.log(translate);
         return translate;
     } catch (error) {
         console.error('Произошла ошибка при получении перевода:', error);
