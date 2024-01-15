@@ -16,24 +16,26 @@ import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 //Контекст
 import { useTranslate } from '../../contexts/translate/TranslateContext';
+import { useTheme } from '../../contexts/theme/ThemeContext';
 
 import imgHome from '../../../images/home-1-svgrepo-com.png';
 import imgAccount from '../../../images/personal.png';
 import imgInfo from '../../../images/info-svgrepo-com.png';
 import imgChat from '../../../images/list-center-svgrepo-com.png';
 
-import CountersNavigator from '../CountersNavigator';
+import CountersNavigator from '../CountersNavigator/CountersNavigator';
 
 function Main() {
 
     const Tab = createBottomTabNavigator();
     const screenWidth = Dimensions.get('window').width;
     const insets = useSafeAreaInsets();
-    //Перевод
+    //Контекст
     const { selectedTranslations } = useTranslate();
+    const { backgroundColor } = useTheme();
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, backgroundColor]}>
             <Tab.Navigator
                 initialRouteName="CountersScreen" // начальный экран
                 screenOptions={{

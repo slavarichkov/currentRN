@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { TextInput, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { TextInput, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import ButtonImage from '../buttons/ButtonImage';
+import imgInfo from '../../../images/info-svgrepo-com.png';
+//Контекст
+import { useTheme } from '../../contexts/theme/ThemeContext';
 
 type KeyboardType =
     | 'default'
@@ -36,6 +40,7 @@ interface TypesCounterInputWithLabelInside {
     forwardedRef?: React.MutableRefObject<HTMLInputElement | null>,
     handleInputSubmit?: () => void,
     returnKeyType?: ReturnKeyType,
+    onClickInfo?: () => void,
 }
 
 /**
@@ -93,7 +98,11 @@ const CounterInputWithLabelInside: React.FC<TypesCounterInputWithLabelInside> = 
     forwardedRef,
     handleInputSubmit,
     returnKeyType,
+    onClickInfo,
 }) => {
+
+    const { colorText } = useTheme();
+
     let inputRef = useRef(null);
 
     useEffect(() => {
@@ -110,8 +119,15 @@ const CounterInputWithLabelInside: React.FC<TypesCounterInputWithLabelInside> = 
     };
 
     return (
-        <TouchableOpacity style={styles.containerInput} onPress={onPressInput}>
-            <Text style={styles.label}>{label}</Text>
+        <View style={styles.containerInput}>
+            <View style={styles.containerLabel}>
+                <Text style={[styles.label, colorText]}>{label}</Text>
+                <ButtonImage
+                    URLImg={imgInfo}
+                    onPress={onClickInfo}
+                    style={{ width: 20, height: 20, marginBottom: 10, }}
+                />
+            </View>
             <TextInput
                 ref={inputRef}
                 style={styles.input}
@@ -129,7 +145,7 @@ const CounterInputWithLabelInside: React.FC<TypesCounterInputWithLabelInside> = 
                 returnKeyType={returnKeyType ? returnKeyType : 'done'}
                 onSubmitEditing={handleInputSubmit ? handleInputSubmit : () => { }} // самбит при нажатии кнопки на клавиатуре при активном инпуте
             />
-        </TouchableOpacity>
+        </View>
     )
 
 }
@@ -156,11 +172,14 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     label: {
-        fontSize: 14,
-        fontWeight: '500',
-        color: 'rgba(0,0,0,0.7)',
+        fontSize: 15,
+        fontWeight: '700',
         paddingBottom: 10,
     },
+    containerLabel: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    }
 })
 
 export default CounterInputWithLabelInside;

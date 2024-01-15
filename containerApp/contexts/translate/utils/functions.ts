@@ -1,5 +1,5 @@
 import * as Localization from 'react-native-localize';
-import { getLocaleFromAsyncStorage, saveLocaleToAsyncStorage } from '../../../utils/db/asyncStorege/AsyncStore';
+import { getLocaleFromAsyncStorage, saveLocaleToAsyncStorage } from '../../../utils/db/asyncStorage/AsyncStore';
 import { translates } from '../../../utils/dictionary';
 
 
@@ -70,7 +70,6 @@ async function getTranslation(): Promise<TypeTranslateObject> {
         }
 
         const translate: TypeTranslateObject = translates[translateLocale];
-        console.log(translate);
         return translate;
     } catch (error) {
         console.error('Произошла ошибка при получении перевода:', error);
