@@ -10,6 +10,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
 import { TranslateContextProvider } from './containerApp/contexts/translate/TranslateContext';
+import { GlobalContextProvider } from './containerApp/contexts/global/GlobalContext';
+import { ThemeContextProvider } from './containerApp/contexts/theme/ThemeContext';
 
 import Main from './containerApp/navigators/Main/Main';
 
@@ -18,9 +20,13 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer>
       <SafeAreaProvider>
-        <TranslateContextProvider>
-          <Main />
-        </TranslateContextProvider>
+        <ThemeContextProvider>
+          <TranslateContextProvider>
+            <GlobalContextProvider>
+              <Main />
+            </GlobalContextProvider>
+          </TranslateContextProvider>
+        </ThemeContextProvider>
       </SafeAreaProvider>
     </NavigationContainer>
   );
