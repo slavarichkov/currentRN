@@ -11,7 +11,7 @@ import HeatCounterScreen from '../../screens/counters/HeatCounterScreen/HeatCoun
 import GasCounterScreen from '../../screens/counters/GasCounterScreen/GasCounterScreen';
 import LeftScreen from '../../screens/counters/LeftScreen/LeftScreen';
 import RightScreen from '../../screens/counters/RightScreen/RightScreen';
-import TextCountersInfo from '../../componentsShared/textCountersInfo/TextCountersInfo';
+import AddressInfo from './components/AddressInfo';
 
 import imgWater from '../../../images/drop-svgrepo-com.png';
 import imgElectrocity from '../../../images/electricity-svgrepo-com.png';
@@ -78,8 +78,8 @@ function CountersNavigator() {
     return (
         isLoad ?
             <View style={[styles.container, backgroundColor]}>
-                <View style={styles.text}>
-                    <TextCountersInfo />
+                <View style={styles.textAddressContainer}>
+                    <AddressInfo address={address} />
                 </View>
                 <Tab.Navigator
                     initialRouteName={arrayCounters[0].nameScreen} // начальный экран
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    text: {
+    textAddressContainer: {
         //position: 'absolute',
         height: '10%',
         top: 35,
