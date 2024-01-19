@@ -125,18 +125,6 @@ const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
                 onClickInfo={onClickInfoOneCounter}
                 dateReading={dateReading}
             />
-            {/* <CounterInputWithLabelInside
-                label={inputTwoLabel}
-                placeholder={onePlaceholder}
-                value={inputTwo}
-                onChangeText={setInputTwo}
-                maxLength={150}
-                placeholderTextColor={'rgba(0,0,0,0.5)'}
-                forwardedRef={inputTwoRef}
-                handleInputSubmit={onSubmit}
-                returnKeyType={'done'}
-                onClickInfo={onClickInfoTwoCounter}
-            /> */}
             <View style={styles.buttonSubmit}>
                 <Button
                     onClick={onSubmit}
