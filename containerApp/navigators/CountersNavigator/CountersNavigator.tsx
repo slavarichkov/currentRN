@@ -9,6 +9,7 @@ import HotWaterCounetrsScreen from '../../screens/counters/HotWaterCounetrsScree
 import ElectrocityCounetrsScreen from '../../screens/counters/ElectrocityCounetrsScreen/ElectrocityCounetrsScreenCounetrsScreen';
 import HeatCounterScreen from '../../screens/counters/HeatCounterScreen/HeatCounterScreen';
 import GasCounterScreen from '../../screens/counters/GasCounterScreen/GasCounterScreen';
+import CountersInfoScreen from '../../screens/counters/CountersInfoScreen/CountersInfoScreen';
 import LeftScreen from '../../screens/counters/LeftScreen/LeftScreen';
 import RightScreen from '../../screens/counters/RightScreen/RightScreen';
 import AddressInfo from './components/AddressInfo';
@@ -17,6 +18,7 @@ import imgWater from '../../../images/drop-svgrepo-com.png';
 import imgElectrocity from '../../../images/electricity-svgrepo-com.png';
 import imgHeat from '../../../images/radiators-heat-svgrepo-com.png';
 import imgGas from '../../../images/gas-burner-svgrepo-com.png';
+import imgList from '../../../images/list-center-svgrepo-com.png';
 
 import { openOrCreateDatabase } from '../../utils/db/SQLite/dbCounters';
 import { openOrCreateDatabaseMeterCounterRecord } from '../../utils/db/SQLite/dbCountersReading';
@@ -132,6 +134,24 @@ function CountersNavigator() {
                         )
 
                     })}
+                     <Tab.Screen
+                        name='CountersInfoScreen'
+                        component={CountersInfoScreen}
+                        initialParams={{ screenNavigator: arrayCounters[arrayCounters.length - 1].nameScreen }}
+                        options={{
+                            tabBarIndicatorStyle: { backgroundColor: 'white' }, // Стиль индикатора
+                            tabBarLabel: () => null,
+                            tabBarIcon: ({ color }) => (
+                                <>
+                                    <Image
+                                        source={imgList} // Указываем путь к PNG-изображению
+                                        style={{ width: 28, height: 28, tintColor: 'white'}} // Устанавливаем размер и цвет
+                                    />
+
+                                </>
+                            ),
+                        }}
+                    />
                     <Tab.Screen
                         name='RightScreen'
                         component={RightScreen}
