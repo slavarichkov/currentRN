@@ -146,8 +146,8 @@ async function getDataByCounterName(counterName: string): Promise<TypeCounterInf
                         (_, result: any) => {
                             if (result.rows.length > 0) {
                                 const data = result.rows.raw()[0]; // Получаем данные в виде объекта
-                                console.log(result.rows.raw())
-                                console.log(`Данные счетчика с именем "${counterName}" успешно получен`);
+                                // console.log(result.rows.raw())
+                                // console.log(`Данные счетчика с именем "${counterName}" успешно получен`);
                                 resolve(data);
                             } else {
                                 console.log(`Счетчик с именем "${counterName}" не найден в базе данных.`);
@@ -189,7 +189,7 @@ async function getDataByCounterName(counterName: string): Promise<TypeCounterInf
  *   }
  * );
  */
-async function getDataByCounterNameAndAddressId(addressId: string, counterName: string): Promise<TypeCounterInfo | null> {
+async function getDataByCounterNameAndAddressId(addressId: number, counterName: string): Promise<TypeCounterInfo | undefined> {
     return new Promise(async (resolve, reject) => {
         try {
             const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
@@ -203,12 +203,11 @@ async function getDataByCounterNameAndAddressId(addressId: string, counterName: 
                         (_, result: any) => {
                             if (result.rows.length > 0) {
                                 const data = result.rows.raw()[0]; // Получаем данные в виде объекта
-                                console.log(result.rows.raw())
-                                console.log(`Данные счетчика с именем "${addressId}" успешно получен`);
+                                console.log(`Данные счетчика с именем "${counterName} и адресом ${addressId}" успешно получены`);
                                 resolve(data);
                             } else {
-                                console.log(`Счетчик с именем "${addressId}" не найден в базе данных.`);
-                                resolve(null);
+                                console.log(`Счетчик с именем "${counterName}" и адресом ${addressId} не найден в базе данных.`);
+                                resolve(undefined);
                             }
                         },
                         (_, error: any) => {
@@ -367,11 +366,12 @@ async function deleteDocumentById(id: number, callback: Function): Promise<void>
  *   }
  * );
  */
-async function updateDocumentById(id: number, data: { name: string; address: string; counterNumber: string; dateOfCounterVerification: string; dateOfCounterVerificationNext: string; }, callback: Function): Promise<void> {
+async function updateDocumentById(data: TypeCounterInfo, callback: Function): Promise<void> {
     try {
         const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
         // Извлекаем новые данные из объекта newData
         // Извлекаем значения
+        const id = data.id;
         const name = data.name;
         const address = data.address;
         const counterNumber = data.counterNumber;
@@ -382,7 +382,7 @@ async function updateDocumentById(id: number, data: { name: string; address: str
             (tx) => {
                 tx.executeSql(
                     "UPDATE counters SET name = ?, address = ?, counterNumber = ?, dateOfCounterVerification = ?, dateOfCounterVerificationNext = ? WHERE id = ?",
-                    [type, date, cost, volume, vin, id],
+                    [name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, id],
                     (_, result) => {
                         console.log(`Документ с ID ${id} успешно обновлен в таблице counters.`);
                         callback();

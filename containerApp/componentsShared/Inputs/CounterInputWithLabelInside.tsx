@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { TextInput, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ButtonImage from '../buttons/ButtonImage';
+import Button from '../buttons/Button';
 import imgInfo from '../../../images/info-svgrepo-com.png';
 //Контекст
 import { useTheme } from '../../contexts/theme/ThemeContext';
+import { formatDate } from '../../utils/funtions';
 
 type KeyboardType =
     | 'default'
@@ -41,6 +43,7 @@ interface TypesCounterInputWithLabelInside {
     handleInputSubmit?: () => void,
     returnKeyType?: ReturnKeyType,
     onClickInfo?: () => void,
+    dateReading?: string,
 }
 
 /**
@@ -99,6 +102,7 @@ const CounterInputWithLabelInside: React.FC<TypesCounterInputWithLabelInside> = 
     handleInputSubmit,
     returnKeyType,
     onClickInfo,
+    dateReading,
 }) => {
 
     const { colorText } = useTheme();
@@ -122,15 +126,15 @@ const CounterInputWithLabelInside: React.FC<TypesCounterInputWithLabelInside> = 
         <View style={styles.containerInput}>
             <View style={styles.containerLabel}>
                 <Text style={[styles.label, colorText]}>{label}</Text>
-                <ButtonImage
+                {/* <ButtonImage
                     URLImg={imgInfo}
                     onPress={onClickInfo}
                     style={{ width: 20, height: 20, marginBottom: 10, }}
-                />
+                /> */}
             </View>
             <TextInput
                 ref={inputRef}
-                style={styles.input}
+                style={[styles.input, colorText]}
                 placeholder={placeholder}
                 value={value}
                 onChangeText={onChangeText}
@@ -145,6 +149,7 @@ const CounterInputWithLabelInside: React.FC<TypesCounterInputWithLabelInside> = 
                 returnKeyType={returnKeyType ? returnKeyType : 'done'}
                 onSubmitEditing={handleInputSubmit ? handleInputSubmit : () => { }} // самбит при нажатии кнопки на клавиатуре при активном инпуте
             />
+            <Text style={[styles.date, colorText]}>{dateReading ? formatDate(dateReading) : ''}</Text>
         </View>
     )
 
@@ -179,6 +184,10 @@ const styles = StyleSheet.create({
     containerLabel: {
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    date: {
+        fontSize: 11,
+        fontWeight: '500',
     }
 })
 

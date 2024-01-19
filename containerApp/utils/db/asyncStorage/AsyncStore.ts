@@ -76,9 +76,54 @@ const getPermissionLocation = async (): Promise<string | null> => {
     }
 };
 
+/**
+ * Сохраняет массив названий счетчиков в Async Storage.
+ *
+ * @param {string[]} counterNames - Массив названий счетчиков.
+ * @returns {Promise<void>} Промис, который разрешается после успешного сохранения данных в Async Storage.
+ *
+ * @example
+ * // Пример использования:
+ * const counterNamesArray = ['Counter 1', 'Counter 2', 'Counter 3'];
+ * saveCountersToAsyncStorage(counterNamesArray);
+ */
+const saveCountersToAsyncStorage = async (counterNames: string[]): Promise<void> => {
+    try {
+      const jsonString = JSON.stringify(counterNames);
+      await AsyncStorage.setItem('counterNames', jsonString);
+      console.log('Массив названий счетчиков успешно сохранен в Async Storage.');
+    } catch (error) {
+      console.error('Ошибка при сохранении массива названий счетчиков:', error);
+    }
+  };
+  
+  /**
+   * Получает массив названий счетчиков из Async Storage.
+   *
+   * @returns {Promise<string[]|[]>} Промис, который разрешается массивом названий счетчиков или пустым массивом в случае ошибки.
+   *
+   * @example
+   * // Пример использования:
+   * const counterNames = await getCounterNamesFromAsyncStorage();
+   * console.log('Полученные названия счетчиков:', counterNames);
+   */
+  const getCounterNamesFromAsyncStorage = async (): Promise<string[] | []> => {
+    try {
+      const jsonString = await AsyncStorage.getItem('counterNames');
+      const counterNames = JSON.parse(jsonString);
+      console.log('Массив названий счетчиков успешно получен из Async Storage:', counterNames);
+      return counterNames || []; // Возвращаем массив или пустой массив, если ничего не найдено
+    } catch (error) {
+      console.error('Ошибка при получении массива названий счетчиков:', error);
+      return [];
+    }
+  };
+
 export {
     saveLocaleToAsyncStorage, // Функция для сохранения значения "locale" в Async Storage
     getLocaleFromAsyncStorage, // Функция для получения значения "locale" из Async Storage
     savePermissionLocation, // Сохранить состояние на получение локации
     getPermissionLocation, // Получить состояние разрешения на получение локации
+    saveCountersToAsyncStorage,
+    getCounterNamesFromAsyncStorage,
 };

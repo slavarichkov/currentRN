@@ -1,4 +1,4 @@
-import { getDataByCounterName, createOrInsertData } from "../../../utils/db/SQLite/dbCounters";
+import { getDataByCounterName, createOrInsertData, getDataByCounterNameAndAddressId } from "../../../utils/db/SQLite/dbCounters";
 import { arrayFirstObgCounterData } from './const';
 import { TypeCounterInfo, TypeCounterMeters } from "../types/types";
 import { findRecordsByIdCounter } from "../../../utils/db/SQLite/dbCountersReading";
@@ -10,13 +10,14 @@ import { findRecordsByIdCounter } from "../../../utils/db/SQLite/dbCountersReadi
  * @returns {Promise<TypeCounterInfo >} Промис, который разрешается данными счетчика или null, если счетчик не найден и создает его с первой записью.
  * @throws {Error} Ошибка в случае проблем с получением данных из базы данных.
  */
-async function getDataCounters(counterName: string): Promise<TypeCounterInfo | undefined> {
+async function getDataCounters(addressId: string, counterName: string): Promise<TypeCounterInfo | undefined> {
     try {
-        const obj = await getDataByCounterName(counterName);
+        const obj = await getDataByCounterNameAndAddressId(addressId.toString(), counterName);
         if (obj) {
             return obj;
         } else {
-            const savedObj = arrayFirstObgCounterData.find((counterObj) => counterObj.name === counterName);
+            let savedObj = arrayFirstObgCounterData.find((counterObj) => counterObj.name === counterName);
+            savedObj.address = addressId.toString();
             if (savedObj) {
                 const objCurrent = await saveDataCounters(savedObj);
                 return objCurrent;
@@ -112,10 +113,10 @@ function findNearestDateObject(dataArray: Array<TypeCounterMeters>) {
 *   console.error("Ошибка при получении данных о счетчике и показаниях:", error);
 * }
 */
-async function getDataAndNearestReadingCounter(counterName: string): Promise<{ counterInfo: TypeCounterInfo | undefined, nearestReading: string | undefined }> {
+async function getDataAndNearestReadingCounter(addressId: string, counterName: string): Promise<{ counterInfo: TypeCounterInfo | undefined, nearestReading: TypeCounterMeters | undefined }> {
     try {
         // Получение данных о счетчике
-        const counterInfo = await getDataCounters(counterName);
+        const counterInfo = await getDataCounters(addressId, counterName);
 
         // Идентификация строкового идентификатора счетчика
         const counterId = counterInfo?.id?.toString();
@@ -123,10 +124,9 @@ async function getDataAndNearestReadingCounter(counterName: string): Promise<{ c
         // Получение ближайших показаний счетчика
         if (counterId) {
             const counterReadings = await findRecordsByIdCounter(counterId);
-            console.log(`Reading ${counterName}`, counterReadings);
             if (counterReadings.length > 0) {
                 const nearestObjDateReading = findNearestDateObject(counterReadings);
-                const nearestReading = nearestObjDateReading.data;
+                const nearestReading = nearestObjDateReading;
 
                 return { counterInfo, nearestReading };
             }

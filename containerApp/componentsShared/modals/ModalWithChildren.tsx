@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BlurView } from '@react-native-community/blur';
 import { View, TouchableOpacity, StyleSheet, Image, Modal, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,13 +8,9 @@ import imgArrowHider from '../../../images/arrow-down-svgrepo-com.png';
 interface ModalWithChildren {
     isVisible: boolean,
     onClose: () => void,
-    onRemove?: () => void,
-    onEdit?: () => void,
     theme?: string,
     childComponent?: any,
-    isHiddeButtonUpdateAndRemove?: boolean,
     isLoading?: boolean,
-    childButtonComponent?: any,
 }
 
 const ModalWithChildren: React.FC<ModalWithChildren> = ({

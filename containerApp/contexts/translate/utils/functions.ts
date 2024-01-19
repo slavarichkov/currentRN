@@ -59,11 +59,10 @@ interface TypeTranslateObject {
   * @example
   * await getTranslation();
   */
-async function getTranslation(): Promise<TypeTranslateObject> {
+async function getTranslation(localeUser: string): Promise<TypeTranslateObject> {
     try {
-        let locale = await getLocaleUser(); // Возвращает локаль пользователя
         let translateLocale = 'en';
-        const foundTranslate = arrayLocalizations.find((item) => locale.includes(item.key));
+        const foundTranslate = arrayLocalizations.find((item) => localeUser.includes(item.key));
 
         if (foundTranslate) {
             translateLocale = foundTranslate.locale;

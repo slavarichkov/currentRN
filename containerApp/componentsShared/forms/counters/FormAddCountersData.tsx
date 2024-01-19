@@ -9,14 +9,15 @@ import { chekRegexCounters } from "../../../utils/regex";
 
 interface FormAddCountersDataProps {
     inputOneLabel: string,
-    inputTwoLabel: string,
+    inputTwoLabel?: string,
     onePlaceholder: string,
     isLoadingSubmit?: boolean,
     onSubmitForm: any,
     onClickInfoOneCounter?: () => void,
     onClickInfoTwoCounter?: () => void,
     currentOneCurrentMeter: string,
-    currentTwoCurrentMeter: string,
+    currentTwoCurrentMeter?: string,
+    dateReading?: string,
 }
 
 /**
@@ -45,14 +46,12 @@ interface FormAddCountersDataProps {
  */
 const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
     inputOneLabel,
-    inputTwoLabel,
     onePlaceholder,
     isLoadingSubmit,
     onSubmitForm,
     onClickInfoOneCounter,
-    onClickInfoTwoCounter,
     currentOneCurrentMeter,
-    currentTwoCurrentMeter,
+    dateReading,
 }) => {
 
     const { selectedTranslations } = useTranslate();
@@ -77,26 +76,20 @@ const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
     }
 
     function handleInputOneSubmit() {
-        if (inputTwoLabel) {
-            // Фокусировка на следующем TextInput
-            inputTwoRef?.current.focus();
-        } else {
-            onSubmit();
-        }
+        onSubmit();
     };
 
     // Валидация
     function validateForm() {
-        if (inputTwoLabel && (inputOne === '' || inputTwo === '')) {
+        if ((inputOne === '')) {
             setIsValidForm(false);
             setMessageValid(selectedTranslations.validMessageValues);
             return;
         }
 
         const regexOne = chekRegexCounters(inputOne);
-        const regexTwo = chekRegexCounters(inputTwo);
 
-        if ((inputTwoLabel && regexOne && regexTwo) || (!inputTwoLabel && regexOne)) {
+        if (regexOne) {
             setIsValidForm(true);
             setMessageValid('')
         } else {
@@ -114,10 +107,7 @@ const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
         if (currentOneCurrentMeter && currentOneCurrentMeter !== '') {
             setInputOne(currentOneCurrentMeter)
         }
-        if (currentTwoCurrentMeter && currentTwoCurrentMeter !== '') {
-            setInputTwo(currentTwoCurrentMeter);
-        }
-    }, [currentOneCurrentMeter, currentTwoCurrentMeter])
+    }, [currentOneCurrentMeter])
 
 
     return (
@@ -133,8 +123,9 @@ const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
                 handleInputSubmit={handleInputOneSubmit}
                 returnKeyType={'next'}
                 onClickInfo={onClickInfoOneCounter}
+                dateReading={dateReading}
             />
-            <CounterInputWithLabelInside
+            {/* <CounterInputWithLabelInside
                 label={inputTwoLabel}
                 placeholder={onePlaceholder}
                 value={inputTwo}
@@ -145,7 +136,7 @@ const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
                 handleInputSubmit={onSubmit}
                 returnKeyType={'done'}
                 onClickInfo={onClickInfoTwoCounter}
-            />
+            /> */}
             <View style={styles.buttonSubmit}>
                 <Button
                     onClick={onSubmit}

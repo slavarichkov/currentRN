@@ -2,42 +2,47 @@ const hotWaterObject = {
     name: 'Горячая вода',
     address: '123456789',
     counterNumber: '1234567891',
-    dateOfCounterVerification: '2022-01-15',
-    dateOfCounterVerificationNext: '2023-01-15',
+    dateOfCounterVerification: new Date().toString(),
+    dateOfCounterVerificationNext: new Date().toString(),
 };
 
 const coldWaterObject = {
     name: 'Холодная вода',
-    address: '123456789',
     counterNumber: '123456789',
-    dateOfCounterVerification: '2022-01-15',
-    dateOfCounterVerificationNext: '2023-01-15',
+    dateOfCounterVerification: new Date().toString(),
+    dateOfCounterVerificationNext: new Date().toString(),
 };
 
-const dayElectrocityObject = {
-    name: 'Электричество день',
-    address: '123456789',
+const electrocityObject = {
+    name: 'Электричество',
     counterNumber: '123456789',
-    dateOfCounterVerification: '2022-01-15',
-    dateOfCounterVerificationNext: '2023-01-15',
+    dateOfCounterVerification: new Date().toString(),
+    dateOfCounterVerificationNext: new Date().toString(),
 };
+
+
+const heatObject = {
+    name: 'Отопление',
+    counterNumber: '123456789',
+    dateOfCounterVerification: new Date().toString(),
+    dateOfCounterVerificationNext: new Date().toString(),
+};
+
 
 const nightElectrocityObject = {
     name: 'Электричество ночь',
-    address: '123456789',
     counterNumber: '1234567891111',
-    dateOfCounterVerification: '2022-01-15',
-    dateOfCounterVerificationNext: '2023-01-15',
+    dateOfCounterVerification: new Date().toString(),
+    dateOfCounterVerificationNext: new Date().toString(),
 };
 
 const gasObject = {
     name: 'Газ',
-    address: '123456789',
     counterNumber: '123456789',
-    dateOfCounterVerification: '2022-01-15',
-    dateOfCounterVerificationNext: '2023-01-15',
+    dateOfCounterVerification: new Date().toString(),
+    dateOfCounterVerificationNext: new Date().toString(),
 };
 
-const arrayFirstObgCounterData = [hotWaterObject, coldWaterObject, dayElectrocityObject, nightElectrocityObject, gasObject];
+const arrayFirstObgCounterData = [hotWaterObject, coldWaterObject, electrocityObject, heatObject, gasObject];
 
-export { hotWaterObject, coldWaterObject, dayElectrocityObject, nightElectrocityObject, gasObject, arrayFirstObgCounterData };
+export { hotWaterObject, coldWaterObject, electrocityObject, gasObject, heatObject, arrayFirstObgCounterData };

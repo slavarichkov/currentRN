@@ -1,8 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from "../../contexts/theme/ThemeContext";
+import { TypeCounterInfo } from '../../screens/counters/types/types';
 
-const TextCountersInfo = ({ }) => {
+interface TextCountersInfoPropsTypes {
+    dataCounter: TypeCounterInfo;
+}
+
+const TextCountersInfo: React.FC<TextCountersInfoPropsTypes > = ({ dataCounter }) => {
     const { colorText } = useTheme();
+
     return (
         <View style={styles.container}>
             <Text style={[styles.text, colorText]}>Екатеринбург Буторина 1 141</Text>

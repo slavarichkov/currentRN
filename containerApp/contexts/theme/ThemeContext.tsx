@@ -22,12 +22,24 @@ const ThemeContext = createContext();
  */
 export const ThemeContextProvider = ({ children }) => {
 
-    const [theme, setTheme] = useState('dark');
-    const [colorText, setColorText] = useState({ color: 'rgba(0,0,0,1)' });
+    const [theme, setTheme] = useState<string>('dark');
+    const [colorText, setColorText] = useState({ color: 'rgba(255,255,255,1)' });
+    const [colorTextModal, setColorTextModal] = useState({ color: 'rgba(0,0,0,1)' });
     const [backgroundColor, setBackgroundColor] = useState({ backgroundColor: 'gray' });
 
+    function changeTheme(theme: 'light' | 'dark') {
+        if (theme === 'light' || theme === 'dark') {
+            setTheme(theme);
+            if (theme === 'light') {
+                setBackgroundColor({ backgroundColor: 'gray' })
+            } else if (theme === 'dark') {
+                setBackgroundColor({ backgroundColor: '#292828' })
+            }
+        }
+    }
+
     return (
-        <ThemeContext.Provider value={{ theme, colorText, backgroundColor }}>
+        <ThemeContext.Provider value={{ theme, colorText, colorTextModal, backgroundColor, changeTheme }}>
             {children}
         </ThemeContext.Provider>
     )

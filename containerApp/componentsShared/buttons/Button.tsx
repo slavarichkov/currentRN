@@ -8,9 +8,10 @@ interface ButtonProps {
   theme?: 'dark' | 'light';
   isLoading?: boolean;
   disabled?: boolean;
+  style?: any;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, text, theme, isLoading, disabled }) => {
+const Button: React.FC<ButtonProps> = ({ onClick, text, style, theme, isLoading, disabled }) => {
   const backgroundColor: string = theme === 'dark' ? 'rgba(110, 110, 110, 0.5)' : 'black';
 
   const onPress = () => {
@@ -21,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({ onClick, text, theme, isLoading, disabl
 
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor }, disabled ? styles.opacity : undefined]}
+      style={[styles.container, { backgroundColor }, style ? style : '', disabled ? styles.opacity : undefined]}
       onPress={onPress}
     >
       {isLoading ? <Loader /> : <Text style={styles.text}>{text}</Text>}

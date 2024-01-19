@@ -1,7 +1,47 @@
 import React, { useEffect, useRef } from 'react';
 import { TextInput, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useTheme } from '../../contexts/theme/ThemeContext';
 
-function TextInputWithLabelInside({
+type KeyboardType =
+    | 'default'
+    | 'numeric'
+    | 'email-address'
+    | 'phone-pad'
+    | 'ascii-capable'
+    | 'numbers-and-punctuation'
+    | 'url'
+    | 'name-phone-pad'
+    | 'decimal-pad'
+    | 'twitter'
+    | 'web-search';
+
+type ReturnKeyType =
+    | 'done'
+    | 'go'
+    | 'next'
+    | 'search'
+    | 'send';
+
+interface TypesTextInputWithLabelInside {
+    label: string,
+    placeholder?: string,
+    value: string | number,
+    onChangeText: (value: string) => void,
+    maxLength?: number,
+    placeholderTextColor?: string,
+    keyboardType?: KeyboardType,
+    editable?: boolean,
+    multiline?: boolean,
+    numberOfLines?: number,
+    onFocus?: any,
+    forwardedRef?: React.MutableRefObject<HTMLInputElement | null>,
+    handleInputSubmit?: () => void,
+    returnKeyType?: ReturnKeyType,
+    onClickInfo?: () => void,
+    dateReading?: string,
+}
+
+const TextInputWithLabelInside: React.FC<TypesTextInputWithLabelInside> = ({
     label,
     placeholder,
     value,
@@ -16,8 +56,10 @@ function TextInputWithLabelInside({
     forwardedRef,
     handleInputSubmit,
     returnKeyType,
-}) {
+}) => {
     let inputRef = useRef(null);
+
+    const { colorText, theme } = useTheme();
 
     useEffect(() => {
         // Прокидываем ref из пропс в локальный ref
@@ -33,17 +75,17 @@ function TextInputWithLabelInside({
     };
 
     return (
-        <TouchableOpacity  onPress={onPressInput}>
+        <TouchableOpacity onPress={onPressInput} style={styles.containerInput}>
             {value !== '' ?
                 <Text style={styles.label}>{label}</Text>
                 : <></>}
             <TextInput
                 ref={inputRef}
-                style={styles.input}
+                style={[styles.input, colorText]}
                 placeholder={placeholder}
                 value={value}
                 onChangeText={onChangeText}
-                placeholderTextColor={placeholderTextColor ? placeholderTextColor : 'rgba(0,0,0,0.5)'}
+                placeholderTextColor={placeholderTextColor ? placeholderTextColor : 'rgba(255,255,255,0.5)'}
                 maxLength={maxLength}
                 keyboardType={keyboardType ? keyboardType : "default"}
                 editable={editable}
@@ -74,14 +116,14 @@ const styles = StyleSheet.create({
         fontSize: 14,
         padding: 0,
         margin: 0,
-        // width: '70%',
-        color: 'rgba(0,0,0,1)',
+        //width: '70%',
+        // color: 'rgba(0,0,0,1)',
         textAlign: 'right',
     },
     label: {
-        // width: '30%',
+        //width: '30%',
         fontSize: 14,
-        color: 'rgba(0,0,0,0.7)',
+        color: 'rgba(255,255,255,0.7)',
     },
 })
 
