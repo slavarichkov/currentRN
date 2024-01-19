@@ -27,6 +27,7 @@ interface TypesTextInputWithLabelInside {
     placeholder?: string,
     value: string | number,
     onChangeText: (value: string) => void,
+    onClickInput: () => void,
     maxLength?: number,
     placeholderTextColor?: string,
     keyboardType?: KeyboardType,
@@ -46,6 +47,7 @@ const TextInputWithLabelInside: React.FC<TypesTextInputWithLabelInside> = ({
     placeholder,
     value,
     onChangeText,
+    onClickInput,
     maxLength,
     placeholderTextColor,
     keyboardType,
@@ -69,8 +71,12 @@ const TextInputWithLabelInside: React.FC<TypesTextInputWithLabelInside> = ({
     }, [forwardedRef]);
 
     const onPressInput = () => {
-        if (inputRef.current) {
-            inputRef.current.focus();
+        if (!onClickInput) {
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        } else {
+            onClickInput();
         }
     };
 
