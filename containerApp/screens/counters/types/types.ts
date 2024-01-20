@@ -8,6 +8,7 @@ export interface TypeCounterInfo {
     counterNumber: string;
     dateOfCounterVerification: string;
     dateOfCounterVerificationNext: string;
+    costOfaUnitOfMeasurement: string;
 }
 
 /**

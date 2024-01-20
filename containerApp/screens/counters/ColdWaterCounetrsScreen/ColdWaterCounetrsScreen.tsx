@@ -127,7 +127,7 @@ const ColdWaterCounetrsScreen = () => {
     */
     async function getDataWaterCounters() {
         try {
-            // Получение данных о счетчиках горячей и холодной воды
+            // Получение данных о счетчике холодной воды
             const coldWater = await getDataAndNearestReadingCounter(address.id.toString(), 'Холодная вода');
 
             // Установка состояний текущих счетчиков

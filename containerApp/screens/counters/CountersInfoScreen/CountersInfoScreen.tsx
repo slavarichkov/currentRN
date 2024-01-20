@@ -5,7 +5,6 @@ import { useGlobal } from '../../../contexts/global/GlobalContext';
 
 import FormSendAndSaveCountersData from "../../../componentsShared/forms/counters/FormSendAndSaveCountersData";
 
-
 function CountersInfoScreen() {
 
     const { backgroundColor } = useTheme();

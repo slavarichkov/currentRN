@@ -1,6 +1,8 @@
 import SQLite from 'react-native-sqlite-storage';
 import { TypeAddress, TypeAddressData } from '../../types/addressTypes';
 
+const db = SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+
 /**
  * Асинхронно открывает или создает базу данных SQLite для хранения адресов.
  *
@@ -22,7 +24,7 @@ import { TypeAddress, TypeAddressData } from '../../types/addressTypes';
  * );
  */
 const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void): Promise<void> => {
-    const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+    // const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
     // Проверяем, существует ли таблица "addresses"
     await db.transaction(
         (tx: any) => {

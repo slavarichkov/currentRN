@@ -4,6 +4,7 @@ const hotWaterObject = {
     counterNumber: '1234567891',
     dateOfCounterVerification: new Date().toString(),
     dateOfCounterVerificationNext: new Date().toString(),
+    costOfaUnitOfMeasurement: '1',
 };
 
 const coldWaterObject = {
@@ -11,6 +12,7 @@ const coldWaterObject = {
     counterNumber: '123456789',
     dateOfCounterVerification: new Date().toString(),
     dateOfCounterVerificationNext: new Date().toString(),
+    costOfaUnitOfMeasurement: '1',
 };
 
 const electrocityObject = {
@@ -18,6 +20,7 @@ const electrocityObject = {
     counterNumber: '123456789',
     dateOfCounterVerification: new Date().toString(),
     dateOfCounterVerificationNext: new Date().toString(),
+    costOfaUnitOfMeasurement: '1',
 };
 
 
@@ -26,6 +29,7 @@ const heatObject = {
     counterNumber: '123456789',
     dateOfCounterVerification: new Date().toString(),
     dateOfCounterVerificationNext: new Date().toString(),
+    costOfaUnitOfMeasurement: '1',
 };
 
 
@@ -34,6 +38,7 @@ const nightElectrocityObject = {
     counterNumber: '1234567891111',
     dateOfCounterVerification: new Date().toString(),
     dateOfCounterVerificationNext: new Date().toString(),
+    costOfaUnitOfMeasurement: '1',
 };
 
 const gasObject = {
@@ -41,6 +46,7 @@ const gasObject = {
     counterNumber: '123456789',
     dateOfCounterVerification: new Date().toString(),
     dateOfCounterVerificationNext: new Date().toString(),
+    costOfaUnitOfMeasurement: '1',
 };
 
 const arrayFirstObgCounterData = [hotWaterObject, coldWaterObject, electrocityObject, heatObject, gasObject];
