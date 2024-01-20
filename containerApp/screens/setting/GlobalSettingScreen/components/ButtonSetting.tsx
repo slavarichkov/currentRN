@@ -7,15 +7,16 @@ interface ButtonSettingProps {
   onClick: () => void;
   text: string;
   isLoading?: boolean;
+  sizeLoader?: 'large' | 'small';
 }
 
-const ButtonSetting: React.FC<ButtonSettingProps> = ({ style, onClick, text, isLoading }) => {
+const ButtonSetting: React.FC<ButtonSettingProps> = ({ style, onClick, text, isLoading, sizeLoader }) => {
   return (
     <TouchableOpacity style={[styles.buttonProfile, style]} onPress={onClick}>
       {!isLoading ? (
         <Text style={styles.text}>{text}</Text>
       ) : (
-        <Loader />
+        <Loader size={sizeLoader} />
       )}
     </TouchableOpacity>
   );

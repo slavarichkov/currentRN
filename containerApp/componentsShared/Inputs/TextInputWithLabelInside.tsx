@@ -23,7 +23,7 @@ type ReturnKeyType =
     | 'send';
 
 interface TypesTextInputWithLabelInside {
-    label: string,
+    label?: string,
     placeholder?: string,
     value: string | number,
     onChangeText: (value: string) => void,
@@ -82,7 +82,7 @@ const TextInputWithLabelInside: React.FC<TypesTextInputWithLabelInside> = ({
 
     return (
         <TouchableOpacity onPress={onPressInput} style={styles.containerInput}>
-            {value !== '' ?
+            {label !== '' ?
                 <Text style={styles.label}>{label}</Text>
                 : <></>}
             <TextInput

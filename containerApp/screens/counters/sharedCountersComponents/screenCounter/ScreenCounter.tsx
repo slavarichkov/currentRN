@@ -62,10 +62,13 @@ const ScreenCounter: React.FC<ScreenCounterPropsTypes> = ({
 }) => {
 
     const { backgroundColor } = useTheme();
-    
+
     return (
         <View style={[styles.container, backgroundColor]}>
-            <TextCountersInfo dataCounter={dataCounter} onClickCounter={onClickCounter} />
+            <TextCountersInfo
+                dataCounter={dataCounter}
+                onClickCounter={onClickCounter}
+            />
             <FormAddCountersData
                 onSubmitForm={saveData}
                 inputOneLabel={dataCounter.name}

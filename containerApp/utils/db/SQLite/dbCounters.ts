@@ -1,5 +1,6 @@
 import SQLite from 'react-native-sqlite-storage';
 import { TypeCounterInfo } from '../../../screens/counters/types/types';
+const db =  SQLite.openDatabase({ name: "counters.db", location: 'default' });
 
 /**
  * Асинхронно открывает или создает базу данных SQLite для приложения. 
@@ -25,7 +26,6 @@ import { TypeCounterInfo } from '../../../screens/counters/types/types';
  * );
  */
 const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void): Promise<void> => {
-    const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
     // Проверяем, существует ли таблица "counters"
     await db.transaction(
         (tx: any) => {
@@ -83,7 +83,6 @@ const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void
  */
 async function getDataFromDatabase(handleData: (string: string | []) => void): Promise<void> {
     try {
-        const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
         SQLite.enablePromise(true);
         await db.transaction(
             (tx: any) => {
@@ -135,7 +134,6 @@ async function getDataFromDatabase(handleData: (string: string | []) => void): P
 async function getDataByCounterName(counterName: string): Promise<TypeCounterInfo | null> {
     return new Promise(async (resolve, reject) => {
         try {
-            const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
             SQLite.enablePromise(true);
 
             await db.transaction(
@@ -190,9 +188,7 @@ async function getDataByCounterName(counterName: string): Promise<TypeCounterInf
 async function getDataByCounterNameAndAddressId(addressId: number, counterName: string): Promise<TypeCounterInfo | undefined> {
     return new Promise(async (resolve, reject) => {
         try {
-            const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
             SQLite.enablePromise(true);
-
             await db.transaction(
                 (tx: any) => {
                     tx.executeSql(
@@ -259,11 +255,8 @@ async function getDataByCounterNameAndAddressId(addressId: number, counterName: 
 async function createOrInsertData(data: TypeCounterInfo): Promise<TypeCounterInfo> {
     return new Promise<TypeCounterInfo>(async (resolve, reject) => {
         try {
-            const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
-
             // Извлекаем значения
             const { name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement } = data;
-
             // Сохраняем значение "name" в базу данных "counters"
             await db.transaction(
                 (tx: any) => {
@@ -313,7 +306,6 @@ async function createOrInsertData(data: TypeCounterInfo): Promise<TypeCounterInf
  * );
  */
 async function deleteDocumentById(id: number, callback: Function): Promise<void> {
-    const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
     await db.transaction(
         (tx:any) => {
             tx.executeSql(
@@ -366,7 +358,6 @@ async function deleteDocumentById(id: number, callback: Function): Promise<void>
  */
 async function updateDocumentById(data: TypeCounterInfo, callback: Function): Promise<void> {
     try {
-        const db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
         // Извлекаем новые данные из объекта newData
         // Извлекаем значения
         const id = data.id;

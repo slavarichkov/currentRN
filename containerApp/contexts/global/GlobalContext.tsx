@@ -6,6 +6,7 @@ import {
     createNewAddress,
 } from '../../utils/db/SQLite/dbAddress';
 import { TypeAddress, TypeAddressData } from '../../utils/types/addressTypes';
+import { openOrCreateDatabaseMeterCounterRecord } from '../../utils/db/SQLite/dbMeterReadingSubmission';
 
 /**
      * Контекст для работы с общей информацией: адрес.
@@ -18,10 +19,10 @@ export const GlobalContextProvider = ({ children }) => {
     const firstAddressRu = {
         name: 'Первый адрес',
         arrayCountersName: JSON.stringify(['Холодная вода', 'Горячая вода', 'Электричество', 'Отопление', 'Газ']),
-        city: 'Название города',
-        street: 'Название улицы',
-        building: 'Номер здания',
-        apartment: 'Номер помещения',
+        city: 'Адрес: Город',
+        street: 'Улица',
+        building: 'Здание',
+        apartment: 'Помещение',
         email: 'email@email.ru',
         active: 'true',
     }
@@ -100,6 +101,10 @@ export const GlobalContextProvider = ({ children }) => {
 
     useEffect(() => {
         getAddressData();
+    }, [])
+
+    useEffect(() => {
+        openOrCreateDatabaseMeterCounterRecord(() => { }, () => { });
     }, [])
 
     return (

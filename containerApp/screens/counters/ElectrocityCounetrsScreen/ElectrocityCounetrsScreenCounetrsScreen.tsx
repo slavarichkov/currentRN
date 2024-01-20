@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import Loader from "../../../componentsShared/loaders/Loader";
 
 //Контекст
@@ -16,7 +17,7 @@ const ElectrocityCounetrsScreen = () => {
 
     const { selectedTranslations } = useTranslate();
     const { address } = useGlobal();
-    const { theme } = useTheme();
+    const { theme, backgroundColor } = useTheme();
 
     // Текущие показания счетчика и информация о счетчиках
     const [electrocityCurrent, setEctrocityCurrent] = useState<TypeCounterInfo>();
@@ -167,8 +168,17 @@ const ElectrocityCounetrsScreen = () => {
                 closeFormUpdateAndInfo={closeFormUpdateAndInfo}
                 theme={theme}
             />
-            : <Loader />
+            : <View style={[styles.container, backgroundColor]}><Loader /></View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+})
 
 export default ElectrocityCounetrsScreen;

@@ -1,6 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 import { TypeCounterMeters } from '../../../screens/counters/types/types';
-const db = SQLite.openDatabase({ name: "countersReading.db", location: 'default' });
+
+const db = SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
 
 /**
  * Асинхронно открывает или создает базу данных SQLite для работы с данными счетчиков.
@@ -23,21 +24,21 @@ const db = SQLite.openDatabase({ name: "countersReading.db", location: 'default'
  *   }
  * );
  */
-const openOrCreateDatabaseMeterCounterRecord = async (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void): Promise<void> => {
-    // Проверяем, существует ли таблица "countersReading"
-    await db.transaction(
+const openOrCreateDatabaseMeterCounterRecord = (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void) => {
+    // Проверяем, существует ли таблица "meterReadingSubmission"
+     db.transaction(
         (tx: any) => {
             tx.executeSql(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='countersReading';",
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='meterReadingSubmission';",
                 [],
-                (_, { rows }) => {
+                (_: any, { rows }) => {
                     if (rows.length === 0) {
-                        // Таблица "countersReading" не существует, создаем ее
+                        // Таблица "meterReadingSubmission" не существует, создаем ее
                         tx.executeSql(
-                            "CREATE TABLE IF NOT EXISTS countersReading (id INTEGER PRIMARY KEY AUTOINCREMENT, idCounter TEXT, data TEXT, date TEXT);",
+                            "CREATE TABLE IF NOT EXISTS meterReadingSubmission (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, meterReadings TEXT, idAddress TEXT);",
                             [],
                             () => {
-                                console.log(`Таблица "countersReading" создана в базе данных `);
+                                console.log(`Таблица "meterReadingSubmission" создана в базе данных `);
                                 succeffullCallBack(db);
                             },
                             (_, error: any) => {
@@ -46,7 +47,7 @@ const openOrCreateDatabaseMeterCounterRecord = async (succeffullCallBack: (strin
                             }
                         );
                     } else {
-                        console.log(`Таблица "countersReading" уже существует в базе данных`);
+                        console.log(`Таблица "meterReadingSubmission" уже существует в базе данных`);
                         succeffullCallBack(db);
                     }
                 },
@@ -64,44 +65,30 @@ const openOrCreateDatabaseMeterCounterRecord = async (succeffullCallBack: (strin
 };
 
 /**
- * Асинхронно создает запись в таблице "countersReading" базы данных SQLite.
+ * Асинхронно создает запись в таблице "meterReadingSubmission" базы данных SQLite.
  *
  * @param {Object} data - Объект с данными для создания записи в таблице.
- * @param {string} data.idCounter - Идентификатор счетчика.
- * @param {string} data.data - Значение счетчика.
  * @param {string} data.date - Дата записи.
+ * @param {string} data.meterReadings - Массив в виде значений название счетчика и объем потребления.
+ * @param {string} data.idAddress - Массив в виде значений название счетчика и объем потребления.
  * @param {Function} callback - Функция обратного вызова, вызываемая после успешного создания записи.
  * @returns {Promise<void>} Промис, который разрешается после успешного выполнения операции создания записи.
  * @throws {Error} Ошибка в случае проблем с созданием записи.
- *
- * @example
- * // Пример использования:
- * createMeterCounterRecord(
- *   {
- *     idCounter: '12345',
- *     data: '9876',
- *     date: '2023-01-15',
- *   },
- *   () => {
- *     console.log("Запись успешно создана в таблице 'countersReading'");
- *     // Дополнительные действия после создания записи
- *   }
- * );
  */
-const createMeterCounterRecord = async (data: { idCounter: string; data: string; date: string }, callback: () => void): Promise<void> => {
+const createMeterCounterRecord = async (data: { date: string, meterReadings: string, idAddress: string }, callback: () => void): Promise<void> => {
     try {
         SQLite.enablePromise(true);
         await db.transaction(
             (tx: any) => {
                 tx.executeSql(
-                    "INSERT INTO countersReading (idCounter, data, date) VALUES (?, ?, ?);",
-                    [data.idCounter, data.data, data.date],
+                    "INSERT INTO meterReadingSubmission (date, meterReadings, idAddress) VALUES (?, ?, ?);",
+                    [data.date, data.meterReadings, data.idAddress],
                     () => {
-                        console.log(`Запись успешно создана в таблице 'countersReading'`);
+                        console.log(`Запись успешно создана в таблице 'meterReadingSubmission'`);
                         callback();
                     },
                     (_, error: any) => {
-                        console.error("Ошибка при создании записи в таблице 'countersReading':", error);
+                        console.error("Ошибка при создании записи в таблице 'meterReadingSubmission':", error);
                     }
                 );
             },
@@ -113,42 +100,29 @@ const createMeterCounterRecord = async (data: { idCounter: string; data: string;
         );
     } catch (error) {
         console.log(error);
-        throw new Error("Произошла ошибка при создании записи в таблице 'countersReading'");
+        throw new Error("Произошла ошибка при создании записи в таблице 'meterReadingSubmission'");
     }
 };
 
 /**
- * Асинхронно ищет все записи в таблице 'countersReading' по указанному идентификатору счетчика.
+ * Асинхронно ищет все записи в таблице 'meterReadingSubmission' по указанному идентификатору счетчика.
  *
- * @param {string} idCounter - Идентификатор счетчика, для которого нужно найти записи.
+ * @param {string} idAddress - Идентификатор счетчика, для которого нужно найти записи.
  * @returns {Promise<Array<TypeCounterMeters>>} Промис, который разрешается массивом объектов записей или [], если записей не найдено.
  * @throws {Error} Ошибка в случае проблем с выполнением запроса.
  *
  * @example
- * // Пример использования:
- * try {
- *   const idCounter = '12345';
- *   const records = await findRecordsByIdCounter(idCounter);
- *   if (records) {
- *     console.log('Найдены следующие записи:', records);
- *   } else {
- *     console.log('Записей не найдено.');
- *   }
- * } catch (error) {
- *   console.error('Произошла ошибка при поиске записей:', error);
- * }
  */
-async function findRecordsByIdCounter(idCounter: string): Promise<Array<TypeCounterMeters>> {
+async function findRecordsByIdCounter(idAddress: string): Promise<Array<TypeCounterMeters>> {
     try {
         SQLite.enablePromise(true);
-
         return new Promise((resolve, reject) => {
             db.transaction(
                 (tx: any) => {
                     tx.executeSql(
-                        "SELECT * FROM countersReading WHERE idCounter = ?;",
-                        [idCounter],
-                        (_, result: any) => {
+                        "SELECT * FROM meterReadingSubmission WHERE idAddress = ?;",
+                        [idAddress],
+                        (_: any, result: any) => {
                             if (result.rows.length > 0) {
                                 const records = result.rows.raw(); // Получаем данные в виде массива объектов
                                 resolve(records);
@@ -157,7 +131,7 @@ async function findRecordsByIdCounter(idCounter: string): Promise<Array<TypeCoun
                             }
                         },
                         (_, error: any) => {
-                            reject(new Error(`Ошибка при поиске записей в таблице 'countersReading': ${error}`));
+                            reject(new Error(`Ошибка при поиске записей в таблице 'meterReadingSubmission': ${error}`));
                         }
                     );
                 },
@@ -168,13 +142,13 @@ async function findRecordsByIdCounter(idCounter: string): Promise<Array<TypeCoun
             );
         });
     } catch (error) {
-        throw new Error(`Произошла ошибка при поиске записей в таблице 'countersReading': ${error}`);
+        throw new Error(`Произошла ошибка при поиске записей в таблице 'meterReadingSubmission': ${error}`);
     }
 }
 
 
 /**
- * Асинхронно удаляет запись из таблицы "countersReading" базы данных SQLite по идентификатору.
+ * Асинхронно удаляет запись из таблицы "meterReadingSubmission" базы данных SQLite по идентификатору.
  *
  * @param {number} id - Идентификатор записи, которую нужно удалить.
  * @param {Function} callback - Функция обратного вызова, вызываемая после успешного удаления записи.
@@ -185,7 +159,7 @@ async function findRecordsByIdCounter(idCounter: string): Promise<Array<TypeCoun
  * // Пример использования:
  * deleteMeterCounterRecordById(123,
  *   () => {
- *     console.log("Запись успешно удалена из таблицы 'countersReading'");
+ *     console.log("Запись успешно удалена из таблицы 'meterReadingSubmission'");
  *     // Дополнительные действия после удаления записи
  *   }
  * );
@@ -196,14 +170,14 @@ const deleteMeterCounterRecordById = async (id: string, callback: () => void): P
         await db.transaction(
             (tx: any) => {
                 tx.executeSql(
-                    "DELETE FROM countersReading WHERE id = ?;",
+                    "DELETE FROM meterReadingSubmission WHERE id = ?;",
                     [id],
                     () => {
-                        console.log(`Запись успешно удалена из таблицы 'countersReading'`);
+                        console.log(`Запись успешно удалена из таблицы 'meterReadingSubmission'`);
                         callback();
                     },
                     (_, error: any) => {
-                        console.error("Ошибка при удалении записи из таблицы 'countersReading':", error);
+                        console.error("Ошибка при удалении записи из таблицы 'meterReadingSubmission':", error);
                     }
                 );
             },
@@ -215,7 +189,7 @@ const deleteMeterCounterRecordById = async (id: string, callback: () => void): P
         );
     } catch (error) {
         console.log(error);
-        throw new Error("Произошла ошибка при удалении записи из таблицы 'countersReading'");
+        throw new Error("Произошла ошибка при удалении записи из таблицы 'meterReadingSubmission'");
     }
 };
 

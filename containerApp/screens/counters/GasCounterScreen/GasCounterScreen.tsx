@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
-import Loader from "../../../componentsShared/loaders/Loader";
+import { StyleSheet, View } from "react-native";
 
 //Контекст
 import { useTranslate } from '../../../contexts/translate/TranslateContext';
 import { useGlobal } from '../../../contexts/global/GlobalContext';
 import { useTheme } from '../../../contexts/theme/ThemeContext';
+
 import { getCurrentDateByString, findNearestDateObject, getDataAndNearestReadingCounter } from '../utils/functions';
 import { TypeCounterInfo, TypeCounterMeters } from "../types/types";
 import { createMeterCounterRecord, findRecordsByIdCounter } from "../../../utils/db/SQLite/dbCountersReading";
-
-import ScreenCounter from "../sharedCountersComponents/screenCounter/ScreenCounter";
 import { updateDocumentById } from "../../../utils/db/SQLite/dbCounters";
+import ScreenCounter from "../sharedCountersComponents/screenCounter/ScreenCounter";
+import Loader from "../../../componentsShared/loaders/Loader";
 
 const GasCounterScreen = () => {
 
     const { selectedTranslations } = useTranslate();
     const { address } = useGlobal();
-    const { theme } = useTheme();
+    const { theme, backgroundColor } = useTheme();
 
     // Текущие показания счетчика и информация о счетчиках
     const [gasCurrent, setGasCurrent] = useState<TypeCounterInfo>();
@@ -167,8 +168,17 @@ const GasCounterScreen = () => {
                 closeFormUpdateAndInfo={closeFormUpdateAndInfo}
                 theme={theme}
             />
-            : <Loader />
+            : <View style={[styles.container, backgroundColor]}><Loader /></View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+})
 
 export default GasCounterScreen;

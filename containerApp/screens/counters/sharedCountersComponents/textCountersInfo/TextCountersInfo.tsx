@@ -6,12 +6,33 @@ import { formatDate } from '../../../../utils/funtions';
 
 interface TextCountersInfoPropsTypes {
     dataCounter: TypeCounterInfo;
-    onClickCounter: ()=>void;
+    onClickCounter: () => void;
 }
 
+/**
+ * Пропсы компонента TextCountersInfo.
+ * @typedef {Object} TextCountersInfoPropsTypes
+ * @property {TypeCounterInfo} dataCounter - Информация о счетчике.
+ * @property {() => void} onClickCounter - Обработчик клика на компонент.
+ */
+
+/**
+ * Компонент для отображения информации о счетчике.
+ * @param {TextCountersInfoPropsTypes} props - Пропсы компонента.
+ * @returns {React.ReactNode} Компонент TextCountersInfo.
+ */
 const TextCountersInfo: React.FC<TextCountersInfoPropsTypes> = ({ dataCounter, onClickCounter }) => {
     const { colorText } = useTheme();
     const { selectedTranslations } = useTranslate();
+
+    function getUnitOfMeasurement() {
+        const unitFindObj = selectedTranslations.arrayUnitsOfMeasurement.filter((unitObj: any) => unitObj.name === dataCounter.name);
+        let unitCouner = '';
+        if (unitFindObj) {
+            unitCouner = unitFindObj[0].value;
+        }
+        return unitCouner;
+    }
 
     return (
         <TouchableOpacity style={styles.container} onPress={onClickCounter}>
@@ -19,6 +40,7 @@ const TextCountersInfo: React.FC<TextCountersInfoPropsTypes> = ({ dataCounter, o
             <Text style={[styles.text, colorText]}>№ {dataCounter.counterNumber}</Text>
             <Text style={[styles.text, colorText]}>{selectedTranslations.dateOfCounterVerification}: {formatDate(dataCounter.dateOfCounterVerification)}</Text>
             <Text style={[styles.text, colorText]}>{selectedTranslations.dateOfCounterVerificationNext}: {formatDate(dataCounter.dateOfCounterVerification)}</Text>
+            <Text style={[styles.text, colorText]}>{selectedTranslations.costOfaUnitOfMeasurement} {getUnitOfMeasurement()}: {dataCounter.costOfaUnitOfMeasurement} {selectedTranslations.currency}</Text>
         </TouchableOpacity>
     )
 }

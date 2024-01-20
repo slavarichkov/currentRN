@@ -25,7 +25,7 @@
 
 interface Translates {
     [lang: string]: {
-        [key: string]: string;
+        [key: string]: any;
     };
 }
 
@@ -77,6 +77,14 @@ const translates: Translates = {
         buttonNameLanguage: 'Язык',
         en: 'En',
         ru: 'Ru',
+        costOfaUnitOfMeasurement: 'Стоимость',
+        currency: 'руб',
+        arrayUnitsOfMeasurement: [{ name: 'Горячая вода', value: 'м3' }, { name: 'Холодная вода', value: 'м3' }, { name: 'Электричество', value: 'кВт/ч' }, { name: 'Отопление', value: 'кКал' }, { name: 'Газ', value: 'м3' }],
+        cost: 'Стоимость',
+        totalCost: 'Итого',
+        moreInfo: 'Подробнее',
+        volume: 'Количество',
+        
     },
     en: {
         hello: 'hello',
