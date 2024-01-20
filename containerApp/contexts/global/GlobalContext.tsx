@@ -50,7 +50,7 @@ export const GlobalContextProvider = ({ children }) => {
             const addressesArray = await getAllAddresses();
             let activeAddress: TypeAddress = firstAddressRu;
             if (addressesArray.length < 1) {
-                const firstAddressObj = createNewAddress(firstAddress);
+                const firstAddressObj = await createNewAddress(firstAddress);
                 activeAddress = firstAddressObj;
             } else {
                 const activeAddressObj = addressesArray.find((address) => address.active === 'true');

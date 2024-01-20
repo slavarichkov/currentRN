@@ -4,16 +4,6 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { useTheme } from '../../contexts/theme/ThemeContext';
 import { useGlobal } from '../../contexts/global/GlobalContext';
 
-import ColdWaterCounetrsScreen from '../../screens/counters/ColdWaterCounetrsScreen/ColdWaterCounetrsScreen';
-import HotWaterCounetrsScreen from '../../screens/counters/HotWaterCounetrsScreen/HotWaterCounetrsScreen';
-import ElectrocityCounetrsScreen from '../../screens/counters/ElectrocityCounetrsScreen/ElectrocityCounetrsScreenCounetrsScreen';
-import HeatCounterScreen from '../../screens/counters/HeatCounterScreen/HeatCounterScreen';
-import GasCounterScreen from '../../screens/counters/GasCounterScreen/GasCounterScreen';
-import CountersInfoScreen from '../../screens/counters/CountersInfoScreen/CountersInfoScreen';
-import LeftScreen from '../../screens/counters/LeftScreen/LeftScreen';
-import RightScreen from '../../screens/counters/RightScreen/RightScreen';
-import AddressInfo from './components/AddressInfo';
-
 import imgWater from '../../../images/drop-svgrepo-com.png';
 import imgElectrocity from '../../../images/electricity-svgrepo-com.png';
 import imgHeat from '../../../images/radiators-heat-svgrepo-com.png';
@@ -23,6 +13,17 @@ import imgList from '../../../images/list-center-svgrepo-com.png';
 import { openOrCreateDatabase } from '../../utils/db/SQLite/dbCounters';
 import { openOrCreateDatabaseMeterCounterRecord } from '../../utils/db/SQLite/dbCountersReading';
 import { useEffect, useState } from 'react';
+
+import ColdWaterCounetrsScreen from '../../screens/counters/ColdWaterCounetrsScreen/ColdWaterCounetrsScreen';
+import HotWaterCounetrsScreen from '../../screens/counters/HotWaterCounetrsScreen/HotWaterCounetrsScreen';
+import ElectrocityCounetrsScreen from '../../screens/counters/ElectrocityCounetrsScreen/ElectrocityCounetrsScreenCounetrsScreen';
+import HeatCounterScreen from '../../screens/counters/HeatCounterScreen/HeatCounterScreen';
+import GasCounterScreen from '../../screens/counters/GasCounterScreen/GasCounterScreen';
+import CountersInfoScreen from '../../screens/counters/CountersInfoScreen/CountersInfoScreen';
+import LeftScreen from '../../screens/counters/LeftScreen/LeftScreen';
+import RightScreen from '../../screens/counters/RightScreen/RightScreen';
+import AddressInfo from './components/AddressInfo';
+import Loader from '../../componentsShared/loaders/Loader';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -134,7 +135,7 @@ function CountersNavigator() {
                         )
 
                     })}
-                     <Tab.Screen
+                    <Tab.Screen
                         name='CountersInfoScreen'
                         component={CountersInfoScreen}
                         initialParams={{ screenNavigator: arrayCounters[arrayCounters.length - 1].nameScreen }}
@@ -145,7 +146,7 @@ function CountersNavigator() {
                                 <>
                                     <Image
                                         source={imgList} // Указываем путь к PNG-изображению
-                                        style={{ width: 28, height: 28, tintColor: 'white'}} // Устанавливаем размер и цвет
+                                        style={{ width: 28, height: 28, tintColor: 'white' }} // Устанавливаем размер и цвет
                                     />
 
                                 </>
@@ -163,7 +164,7 @@ function CountersNavigator() {
                     />
                 </Tab.Navigator>
             </View>
-            : <></>
+            : <View style={[styles.container, backgroundColor]}><Loader /></View>
     )
 
 }
