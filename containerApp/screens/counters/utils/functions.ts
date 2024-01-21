@@ -19,7 +19,8 @@ async function getDataCounters(addressId: string, counterName: string): Promise<
             let savedObj = arrayFirstObgCounterData.find((counterObj) => counterObj.name === counterName);
             savedObj.address = addressId.toString();
             if (savedObj) {
-                const objCurrent = await saveDataCounters(savedObj);
+                console.log('saved', savedObj);
+                const objCurrent = await createOrInsertData(savedObj);
                 return objCurrent;
             }
         }

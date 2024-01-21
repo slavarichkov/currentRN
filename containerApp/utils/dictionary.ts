@@ -84,7 +84,7 @@ const translates: Translates = {
         totalCost: 'Итого',
         moreInfo: 'Подробнее',
         volume: 'Количество',
-        
+        statistics: 'Статистика',
     },
     en: {
         hello: 'hello',

@@ -68,7 +68,7 @@ const ColdWaterCounetrsScreen = () => {
      */
     async function saveData(data: { inputOne?: string, inputTwo?: string }) {
         try {
-            setIsLoaderSaveData(true);
+            //setIsLoaderSaveData(true);
             const saveReading = async (inputData: string, currentCounter: TypeCounterInfo) => {
                 if (inputData && currentCounter?.id) {
                     const dataReading = {
@@ -76,7 +76,6 @@ const ColdWaterCounetrsScreen = () => {
                         data: inputData,
                         date: getCurrentDateByString(),
                     };
-
                     await createMeterCounterRecord(dataReading, () => {
                         getDataWaterCounters();
                         setTimeout(() => {
@@ -85,7 +84,8 @@ const ColdWaterCounetrsScreen = () => {
                     });
                 }
             };
-            if (data && data.inputOne && coldWaterCurrent) {
+            console.log(data.inputOne, coldWaterCurrent)
+            if (data.inputOne && coldWaterCurrent) {
                 await saveReading(data.inputOne, coldWaterCurrent);
             }
         }
@@ -149,7 +149,7 @@ const ColdWaterCounetrsScreen = () => {
 
     useEffect(() => {
         getDataWaterCounters();
-    }, [])
+    }, [address])
 
     return (
         coldWaterCurrent ?

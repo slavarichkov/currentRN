@@ -65,10 +65,15 @@ const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
     let inputOneRef = useRef(null);
     let inputTwoRef = useRef(null);
 
+    function replaceCommasWithDots(inputString: string) {
+        const input = inputString.toString();
+        return input.replace(/,/g, '.');
+    }
+
     function onSubmit() {
         if (isValidForm) {
             let obgData = {
-                inputOne,
+                inputOne: replaceCommasWithDots(inputOne),
                 inputTwo,
             }
             onSubmitForm(obgData);

@@ -19,11 +19,11 @@ import HotWaterCounetrsScreen from '../../screens/counters/HotWaterCounetrsScree
 import ElectrocityCounetrsScreen from '../../screens/counters/ElectrocityCounetrsScreen/ElectrocityCounetrsScreenCounetrsScreen';
 import HeatCounterScreen from '../../screens/counters/HeatCounterScreen/HeatCounterScreen';
 import GasCounterScreen from '../../screens/counters/GasCounterScreen/GasCounterScreen';
-import CountersInfoScreen from '../../screens/counters/CountersInfoScreen/CountersInfoScreen';
 import LeftScreen from '../../screens/counters/LeftScreen/LeftScreen';
 import RightScreen from '../../screens/counters/RightScreen/RightScreen';
 import AddressInfo from './components/AddressInfo';
 import Loader from '../../componentsShared/loaders/Loader';
+import CountersReadingNavigator from '../CountersReadingNavigator/CountersReadingNavigator';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -40,6 +40,8 @@ function CountersNavigator() {
         nameScreen: string;
         nameCounter: string;
         component: CounterComponent;
+        img: any;
+        colorIndicator: string;
     };
 
     const arrayCountersObj = [
@@ -136,8 +138,8 @@ function CountersNavigator() {
 
                     })}
                     <Tab.Screen
-                        name='CountersInfoScreen'
-                        component={CountersInfoScreen}
+                        name='CountersReadingNavigator'
+                        component={CountersReadingNavigator}
                         initialParams={{ screenNavigator: arrayCounters[arrayCounters.length - 1].nameScreen }}
                         options={{
                             tabBarIndicatorStyle: { backgroundColor: 'white' }, // Стиль индикатора
@@ -156,7 +158,7 @@ function CountersNavigator() {
                     <Tab.Screen
                         name='RightScreen'
                         component={RightScreen}
-                        initialParams={{ screenNavigator: arrayCounters[arrayCounters.length - 1].nameScreen }}
+                        initialParams={{ screenNavigator: 'CountersReadingNavigator' }}
                         options={{
                             tabBarIndicatorStyle: { backgroundColor: 'transparent' }, // Стиль индикатора
                             tabBarLabel: () => null,

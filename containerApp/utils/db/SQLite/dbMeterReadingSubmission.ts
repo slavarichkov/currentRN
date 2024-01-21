@@ -1,7 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 import { TypeCounterMeters } from '../../../screens/counters/types/types';
 
-const db = SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
+const dbInit = SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
 
 /**
  * Асинхронно открывает или создает базу данных SQLite для работы с данными счетчиков.
@@ -26,7 +26,11 @@ const db = SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'd
  */
 const openOrCreateDatabaseMeterCounterRecord = (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void) => {
     // Проверяем, существует ли таблица "meterReadingSubmission"
-     db.transaction(
+    let db = dbInit;
+    if (dbInit === undefined) {
+        db = SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
+    }
+    db.transaction(
         (tx: any) => {
             tx.executeSql(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='meterReadingSubmission';",
@@ -77,6 +81,10 @@ const openOrCreateDatabaseMeterCounterRecord = (succeffullCallBack: (string: str
  */
 const createMeterCounterRecord = async (data: { date: string, meterReadings: string, idAddress: string }, callback: () => void): Promise<void> => {
     try {
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
+        }
         SQLite.enablePromise(true);
         await db.transaction(
             (tx: any) => {
@@ -115,6 +123,10 @@ const createMeterCounterRecord = async (data: { date: string, meterReadings: str
  */
 async function findRecordsByIdCounter(idAddress: string): Promise<Array<TypeCounterMeters>> {
     try {
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
+        }
         SQLite.enablePromise(true);
         return new Promise((resolve, reject) => {
             db.transaction(
@@ -166,6 +178,10 @@ async function findRecordsByIdCounter(idAddress: string): Promise<Array<TypeCoun
  */
 const deleteMeterCounterRecordById = async (id: string, callback: () => void): Promise<void> => {
     try {
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
+        }
         SQLite.enablePromise(true);
         await db.transaction(
             (tx: any) => {

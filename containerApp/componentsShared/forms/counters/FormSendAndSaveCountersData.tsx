@@ -15,9 +15,10 @@ interface TypeCounterData extends TypeCounterInfo {
 }
 interface FormSendAndSaveCountersDataProps {
     countersData: any[]; // Подставьте тип для countersData
+    onClikNavigationStatisticScreen: () => void;
 }
 
-const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = ({ countersData }) => {
+const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = ({ countersData, onClikNavigationStatisticScreen }) => {
 
     const { selectedTranslations } = useTranslate();
     const { address } = useGlobal();
@@ -53,13 +54,20 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
         if (countersData.length > 1) {
             const promises = countersData.map(async (data) => {
                 const statisticObj: any = { name: data.name };
-                if (data && data.closestReading && data.closestReading.data && data.previousReading && data.previousReading.data) {
+                if (data && data.closestReading && data.closestReading.data) {
+                    // Ближайшие данные 
                     const closestReading = Number(data.closestReading.data);
-                    const previousReading = Number(data.previousReading.data);
+                    // Предыдущие данные
+                    let previousReading = 0;
+                    if (data.previousReading && data.previousReading.data) {
+                        previousReading = Number(data.previousReading.data);
+                    }
+                    // Объем потребления с предыдущих показаний
                     const volume = closestReading - previousReading;
-                    statisticObj.volume = volume.toString();
+                    statisticObj.volume = volume.toFixed(3);
+                    //Стоимость
                     const cost = volume * Number(data.costOfaUnitOfMeasurement);
-                    statisticObj.cost = cost.toString();
+                    statisticObj.cost = cost.toFixed(3);
                     costValue = cost + costValue;
                 } else {
                     statisticObj.volume = '0';
@@ -71,7 +79,7 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
             array = await Promise.all(promises);
         }
         setStatistic(array);
-        let costText = `${costValue.toString()} ${selectedTranslations.currency}`
+        let costText = `${costValue.toFixed(2)} ${selectedTranslations.currency}`
         setCost(costText);
     }
 
@@ -96,9 +104,9 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
             const closestReading = Number(item.closestReading.data);
             const previousReading = Number(item.previousReading.data);
             const volume = closestReading - previousReading;
-            meterReading.volume = volume.toString();
+            meterReading.volume = volume.toFixed(3);
             const cost = volume * Number(item.costOfaUnitOfMeasurement);
-            meterReading.cost = cost.toString();
+            meterReading.cost = cost.toFixed(3);
             const countersInfo = item.closestReading ? { nameCounter: item.name, meterReading } : {};
             const meterReadings = countersInfo;
             return meterReadings;
@@ -127,6 +135,10 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
         catch (err) {
             setIsLoadingSave(false);
         }
+    }
+
+    function openStatisticsInfo() {
+        onClikNavigationStatisticScreen();
     }
 
     useEffect(() => {
@@ -163,6 +175,13 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
                         controlShow={openMoreInfo}
                         isShow={isShowMoreInfo}
                     />
+                    <ButtonMoreInfo
+                        text={selectedTranslations.statistics}
+                        controlShow={openStatisticsInfo}
+                        isShow={false}
+                        isImg={false}
+                    />
+
                 </View>
                 {isShowMoreInfo ?
                     <ListInfo countersData={countersData} />
@@ -208,7 +227,9 @@ const styles = StyleSheet.create({
         color: 'rgba(0,0,0,1)',
     },
     buttonMoreInfo: {
-        width: 138,
+        width: '100%',
+        justifyContent: 'space-between',
+        flexDirection: 'row'
     }
 })
 

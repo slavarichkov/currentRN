@@ -76,7 +76,6 @@ const HotWaterCounetrsScreen = () => {
                         data: inputData,
                         date: getCurrentDateByString(),
                     };
-
                     await createMeterCounterRecord(dataReading, () => {
                         getDataWaterCounters();
                         setTimeout(() => {
@@ -130,7 +129,6 @@ const HotWaterCounetrsScreen = () => {
         try {
             // Получение данных о счетчиках горячей и холодной воды
             const hotWater = await getDataAndNearestReadingCounter(address.id.toString(), 'Горячая вода');
-
             // Установка состояний текущих счетчиков
             if (hotWater && hotWater.counterInfo) {
                 setHotWaterCurrent(hotWater.counterInfo);
@@ -148,8 +146,10 @@ const HotWaterCounetrsScreen = () => {
     }
 
     useEffect(() => {
-        getDataWaterCounters();
-    }, [])
+        if(address){
+            getDataWaterCounters();
+        }
+    }, [address])
 
     return (
         hotWaterCurrent ?

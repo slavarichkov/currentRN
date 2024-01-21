@@ -1,6 +1,6 @@
 import SQLite from 'react-native-sqlite-storage';
 import { TypeCounterInfo } from '../../../screens/counters/types/types';
-const db =  SQLite.openDatabase({ name: "counters.db", location: 'default' });
+const dbInit = SQLite.openDatabase({ name: "counters.db", location: 'default' });
 
 /**
  * Асинхронно открывает или создает базу данных SQLite для приложения. 
@@ -27,12 +27,16 @@ const db =  SQLite.openDatabase({ name: "counters.db", location: 'default' });
  */
 const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void): Promise<void> => {
     // Проверяем, существует ли таблица "counters"
+    let db = dbInit;
+    if (dbInit === undefined) {
+        db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
+    }
     await db.transaction(
         (tx: any) => {
             tx.executeSql(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='counters';",
                 [],
-                (_:any, { rows }) => {
+                (_: any, { rows }) => {
                     if (rows.length === 0) {
                         // Таблица "counters" не существует, создаем ее
                         tx.executeSql(
@@ -52,7 +56,7 @@ const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void
                         succeffullCallBack(db);
                     }
                 },
-                (_:any, error: any) => {
+                (_: any, error: any) => {
                     console.error("Ошибка при проверке таблицы:", error);
                     errorCallBack(error);
                 }
@@ -83,11 +87,15 @@ const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void
  */
 async function getDataFromDatabase(handleData: (string: string | []) => void): Promise<void> {
     try {
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
+        }
         SQLite.enablePromise(true);
         await db.transaction(
             (tx: any) => {
                 tx.executeSql(
-                    (_:any, result: any) => {
+                    (_: any, result: any) => {
                         if (result.rows.length > 0) {
                             const data = result.rows.raw(); // Получаем данные в виде массива объектов
                             console.log("Данные из базы данных о счетчиках получены");
@@ -97,7 +105,7 @@ async function getDataFromDatabase(handleData: (string: string | []) => void): P
                             handleData([]);
                         }
                     },
-                    (_:any, error: any) => {
+                    (_: any, error: any) => {
                         console.error("Ошибка при получении данных из базы данных:", error);
                     }
                 );
@@ -134,6 +142,10 @@ async function getDataFromDatabase(handleData: (string: string | []) => void): P
 async function getDataByCounterName(counterName: string): Promise<TypeCounterInfo | null> {
     return new Promise(async (resolve, reject) => {
         try {
+            let db = dbInit;
+            if (dbInit === undefined) {
+                db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
+            }
             SQLite.enablePromise(true);
 
             await db.transaction(
@@ -141,7 +153,7 @@ async function getDataByCounterName(counterName: string): Promise<TypeCounterInf
                     tx.executeSql(
                         "SELECT * FROM counters WHERE name = ?;",
                         [counterName],
-                        (_:any, result: any) => {
+                        (_: any, result: any) => {
                             if (result.rows.length > 0) {
                                 const data = result.rows.raw()[0]; // Получаем данные в виде объекта
                                 resolve(data);
@@ -150,7 +162,7 @@ async function getDataByCounterName(counterName: string): Promise<TypeCounterInf
                                 resolve(null);
                             }
                         },
-                        (_:any, error: any) => {
+                        (_: any, error: any) => {
                             reject(error);
                         }
                     );
@@ -185,16 +197,20 @@ async function getDataByCounterName(counterName: string): Promise<TypeCounterInf
  *   }
  * );
  */
-async function getDataByCounterNameAndAddressId(addressId: number, counterName: string): Promise<TypeCounterInfo | undefined> {
+async function getDataByCounterNameAndAddressId(addressId: number | string, counterName: string): Promise<TypeCounterInfo | undefined> {
     return new Promise(async (resolve, reject) => {
         try {
+            let db = dbInit;
+            if (dbInit === undefined) {
+                db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
+            }
             SQLite.enablePromise(true);
             await db.transaction(
                 (tx: any) => {
                     tx.executeSql(
                         "SELECT * FROM counters WHERE name = ? AND address = ?;",
                         [counterName, addressId],
-                        (_:any, result: any) => {
+                        (_: any, result: any) => {
                             if (result.rows.length > 0) {
                                 const data = result.rows.raw()[0]; // Получаем данные в виде объекта
                                 console.log(`Данные счетчика с именем "${counterName} и адресом ${addressId}" успешно получены`);
@@ -204,7 +220,7 @@ async function getDataByCounterNameAndAddressId(addressId: number, counterName: 
                                 resolve(undefined);
                             }
                         },
-                        (_:any, error: any) => {
+                        (_: any, error: any) => {
                             reject(error);
                         }
                     );
@@ -253,38 +269,34 @@ async function getDataByCounterNameAndAddressId(addressId: number, counterName: 
  * );
  */
 async function createOrInsertData(data: TypeCounterInfo): Promise<TypeCounterInfo> {
-    return new Promise<TypeCounterInfo>(async (resolve, reject) => {
-        try {
-            // Извлекаем значения
-            const { name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement } = data;
-            // Сохраняем значение "name" в базу данных "counters"
-            await db.transaction(
-                (tx: any) => {
-                    tx.executeSql(
-                        "INSERT INTO counters (name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement) VALUES (?, ?, ?, ?, ?, ?)",
-                        [name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement],
-                        (_:any, result: any) => {
-                            console.log(`Информация о счетчике успешно сохранена в базу данных.`);
-                            resolve(data);  // Возвращаем созданный объект после успешной вставки
-                        },
-                        (_:any, error: any) => {
-                            console.error(`Ошибка при сохранении информации о счетчике:`, error);
-                            reject(error);
-                        }
-                    );
-                },
-                null,
-                null,
-                (error: any) => {
-                    console.error("Ошибка при сохранении данных:", error);
-                    reject(error);
-                }
-            );
-        } catch (error) {
-            console.log(error);
-            reject(error);
+    // return new Promise<TypeCounterInfo>(async (resolve, reject) => {
+    try {
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
         }
-    });
+
+        // Извлекаем значения
+        const { name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement } = data;
+        // Сохраняем значение "name" в базу данных "counters"
+        // Выполняем вставку данных в таблицу
+        const result = await db.executeSql(
+            "INSERT INTO counters (name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement) VALUES (?, ?, ?, ?, ?, ?)",
+            [name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement]
+        );
+        if (result[0].insertId) {
+            console.log(`Информация о счетчике успешно сохранена в базу данных.`);
+            let newCounterId = result[0].insertId;
+            newCounterId = { ...data, id: newCounterId };
+            return newCounterId; // Возвращаем созданный объект после успешной вставки
+        } else {
+            console.error(`Ошибка при сохранении информации о счетчике.`);
+            throw new Error("Ошибка при сохранении информации о счетчике.");
+        }
+    } catch (error) {
+        console.error("Ошибка при сохранении данных:", error);
+        throw error;
+    }
 }
 
 /**
@@ -306,16 +318,20 @@ async function createOrInsertData(data: TypeCounterInfo): Promise<TypeCounterInf
  * );
  */
 async function deleteDocumentById(id: number, callback: Function): Promise<void> {
+    let db = dbInit;
+    if (dbInit === undefined) {
+        db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
+    }
     await db.transaction(
-        (tx:any) => {
+        (tx: any) => {
             tx.executeSql(
                 "DELETE FROM counters WHERE id = ?",
                 [id],
-                (_:any, result:any) => {
+                (_: any, result: any) => {
                     console.log(`Document with ID ${id} successfully deleted from the counters table.`);
                     callback();
                 },
-                (_:any, error:any) => {
+                (_: any, error: any) => {
                     console.error(`Error deleting document with ID ${id} from the counters table:`, error);
                 }
             );
@@ -358,6 +374,10 @@ async function deleteDocumentById(id: number, callback: Function): Promise<void>
  */
 async function updateDocumentById(data: TypeCounterInfo, callback: Function): Promise<void> {
     try {
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
+        }
         // Извлекаем новые данные из объекта newData
         // Извлекаем значения
         const id = data.id;
@@ -369,15 +389,15 @@ async function updateDocumentById(data: TypeCounterInfo, callback: Function): Pr
         let dateOfCounterVerificationNext = data.dateOfCounterVerificationNext;
 
         await db.transaction(
-            (tx:any) => {
+            (tx: any) => {
                 tx.executeSql(
                     "UPDATE counters SET name = ?, address = ?, counterNumber = ?, dateOfCounterVerification = ?, dateOfCounterVerificationNext = ?, costOfaUnitOfMeasurement = ? WHERE id = ?",
                     [name, address, counterNumber, dateOfCounterVerification, dateOfCounterVerificationNext, costOfaUnitOfMeasurement, id],
-                    (_:any, result:any) => {
+                    (_: any, result: any) => {
                         console.log(`Документ с ID ${id} успешно обновлен в таблице counters.`);
                         callback();
                     },
-                    (_:any, error:any) => {
+                    (_: any, error: any) => {
                         console.error(`Ошибка при обновлении документа с ID ${id} в таблице counters:`, error);
                     }
                 );

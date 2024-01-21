@@ -10,6 +10,7 @@ import { getDataByCounterNameAndAddressId } from "../../../utils/db/SQLite/dbCou
 import { TypeCounterInfo, TypeCounterMeters } from "../types/types";
 import { findRecordsByIdCounter } from "../../../utils/db/SQLite/dbCountersReading";
 import Loader from "../../../componentsShared/loaders/Loader";
+import ButtonSetting from "../../setting/GlobalSettingScreen/components/ButtonSetting";
 
 interface TypeCounterData extends TypeCounterInfo {
     closestReading?: { key: string; value: string };
@@ -17,12 +18,12 @@ interface TypeCounterData extends TypeCounterInfo {
 }
 
 /**
- * Экран с информацией о показаниях счетчиков.
+ * Экран с информацией о показаниях счетчиков и возможностью сохранить новую запись.
  *
  * @component
  * @returns {JSX.Element} Элемент экрана с информацией о показаниях счетчика.
  */
-function CountersInfoScreen() {
+const CountersInfoScreen = ({ navigation }) => {
 
     const { backgroundColor } = useTheme();
     const { address } = useGlobal();
@@ -79,12 +80,18 @@ function CountersInfoScreen() {
                 const arrayNearestReadings = await findClosestDates(counterReading);
                 if (arrayNearestReadings.length > 0) {
                     counterData.closestReading = arrayNearestReadings[0].closest;
-                    counterData.previousReading = arrayNearestReadings[1].later;
+                    if (counterData.previousReading) {
+                        counterData.previousReading = arrayNearestReadings[1].later;
+                    }
                 }
                 arrayCounters.push(counterData);
             }
         }
         setCounters(arrayCounters);
+    }
+
+    function onClikNavigationStatisticScreen() {
+        navigation.navigate('StatisticsCountersScreen')
     }
 
     useEffect(() => {
@@ -102,7 +109,9 @@ function CountersInfoScreen() {
     return (
         <ScrollView style={[styles.container, backgroundColor]} contentContainerStyle={{ alignItems: 'center' }}>
             {counters && counters.length ?
-                <FormSendAndSaveCountersData countersData={counters} />
+                <>
+                    <FormSendAndSaveCountersData countersData={counters} onClikNavigationStatisticScreen={onClikNavigationStatisticScreen} />
+                </>
                 : <Loader />}
         </ScrollView>
     )
@@ -111,8 +120,6 @@ function CountersInfoScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
     }
 })
 

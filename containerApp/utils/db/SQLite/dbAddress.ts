@@ -1,7 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 import { TypeAddress, TypeAddressData } from '../../types/addressTypes';
 
-const db = SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+const dbInit = SQLite.openDatabase({ name: "addresses.db", location: 'default' });
 
 /**
  * Асинхронно открывает или создает базу данных SQLite для хранения адресов.
@@ -26,6 +26,10 @@ const db = SQLite.openDatabase({ name: "addresses.db", location: 'default' });
 const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void): Promise<void> => {
     // const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
     // Проверяем, существует ли таблица "addresses"
+    let db = dbInit;
+    if (dbInit === undefined) {
+        db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+    }
     await db.transaction(
         (tx: any) => {
             tx.executeSql(
@@ -127,8 +131,10 @@ const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void
 const createNewAddress = async (addressData: TypeAddress): Promise<TypeAddressData> => {
     return new Promise(async (resolve, reject) => {
         try {
-
-            const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+            let db = dbInit;
+            if (dbInit === undefined) {
+                db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+            }
             SQLite.enablePromise(true);
 
             await db.transaction(
@@ -224,7 +230,10 @@ const createNewAddress = async (addressData: TypeAddress): Promise<TypeAddressDa
 
 async function updateAddressById(updatedAddressData: TypeAddressData): Promise<TypeAddressData> {
     try {
-        const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+        }
         SQLite.enablePromise(true);
         // Извлекаем новые данные из объекта updatedAddressData
         const { name, arrayCountersName, email, city, street, building, apartment, active, id } = updatedAddressData;
@@ -294,7 +303,10 @@ async function updateAddressById(updatedAddressData: TypeAddressData): Promise<T
  */
 const deleteAddressById = async (addressId: number, successCallback: () => void, errorCallback: (error: any) => void): Promise<void> => {
     try {
-        const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+        }
         SQLite.enablePromise(true);
 
         await db.transaction(
@@ -346,7 +358,10 @@ const deleteAddressById = async (addressId: number, successCallback: () => void,
  */
 const getAllAddresses = async (): Promise<Array<TypeAddressData>> => {
     try {
-        const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+        let db = dbInit;
+        if (dbInit === undefined) {
+            db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
+        }
         SQLite.enablePromise(true);
 
         return new Promise((resolve, reject) => {

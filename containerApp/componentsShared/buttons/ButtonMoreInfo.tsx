@@ -1,12 +1,13 @@
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from '../../contexts/theme/ThemeContext';
 import imgArrowUp from '../../../images/arrow-up-svgrepo-com-2.png';
 import imgArrowDown from '../../../images/arrow-down-svgrepo-com-2.png';
 
 interface ButtonMoreInfoProps {
-    controlShow: () => void;
+    controlShow: () => void | void;
     isShow: boolean;
     text: string;
+    isImg?: boolean;
 }
 
 /**
@@ -23,18 +24,24 @@ interface ButtonMoreInfoProps {
  * @param {string} props.text - Текст, отображаемый на кнопке.
  * @returns {React.ReactElement} Компонент кнопки.
  */
-const ButtonMoreInfo: React.FC<ButtonMoreInfoProps> = ({ controlShow, isShow, text }) => {
+const ButtonMoreInfo: React.FC<ButtonMoreInfoProps> = ({ controlShow, isShow, text, isImg }) => {
 
     const { colorText } = useTheme();
     return (
         <TouchableOpacity style={styles.containerFilterControl} onPress={controlShow}>
             <Text style={[styles.textFilter, colorText]}>{text}</Text>
-            <Image style={styles.imageFilter} source={isShow ? imgArrowUp : imgArrowDown} />
+            {isImg !== false ?
+                <Image style={styles.imageFilter} source={isShow ? imgArrowUp : imgArrowDown} />
+                :
+                <View style={styles.space}></View>}
         </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
+    space: {
+        width: 10,
+    },
     lightBackgroundColor: {
         // backgroundColor: 'rgba(255,255,255,1)',
     },
