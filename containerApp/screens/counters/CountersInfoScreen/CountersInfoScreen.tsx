@@ -38,7 +38,11 @@ const CountersInfoScreen = ({ navigation }) => {
     */
     async function findClosestDates(data: TypeCounterMeters[]) {
         if (data.length === 1) {
-            return data;
+            const updateData = data.map((item) => {
+                return { closest: { ...item } }
+            })
+            console.log(updateData)
+            return updateData;
         } else if (data.length < 1) {
             return [];
         } else {
