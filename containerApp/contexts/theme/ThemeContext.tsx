@@ -22,7 +22,7 @@ const ThemeContext = createContext();
  */
 export const ThemeContextProvider = ({ children }) => {
 
-    const [theme, setTheme] = useState<string>('dark');
+    const [theme, setTheme] = useState<string>('light');
     const [colorText, setColorText] = useState({ color: 'rgba(255,255,255,1)' });
     const [colorTextModal, setColorTextModal] = useState({ color: 'rgba(0,0,0,1)' });
     const [backgroundColor, setBackgroundColor] = useState({ backgroundColor: 'gray' });

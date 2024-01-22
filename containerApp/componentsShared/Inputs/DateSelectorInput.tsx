@@ -11,6 +11,7 @@ interface DateSelectorProps {
     selectedDate: Date;
     setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
     text: string,
+    colorText?: string,
 }
 /**
  * Инпут для выбора и отображения выбранной даты.
@@ -34,13 +35,13 @@ interface DateSelectorProps {
  * @param {string} props.localeUser - Языковая локаль для отображения даты.
  * @returns {React.ReactElement} Возвращает JSX-элемент компонента DateSelector.
  */
-const DateSelectorInput: React.FC<DateSelectorProps> = ({ showPicker, setShowPicker, selectedDate, setSelectedDate, text }) => {
+const DateSelectorInput: React.FC<DateSelectorProps> = ({ showPicker, setShowPicker, selectedDate, setSelectedDate, text, colorText }) => {
 
-    const { theme, colorText } = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View style={styles.containerDate}>
-            <Text style={[styles.textDate, colorText]}>{text}</Text>
+            <Text style={[styles.textDate, { color: colorText ? colorText : 'rgba(0,0,0,1)' }]}>{text}</Text>
             <View style={Platform.OS === 'android' && theme === 'dark' ? styles.containerDateSelectorForAndroidAndDarkTheme : ''}>
                 <DateSelector
                     showPicker={showPicker}

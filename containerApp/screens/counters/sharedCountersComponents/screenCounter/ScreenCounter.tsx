@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { TypeCounterInfo, TypeCounterMeters } from "../../types/types";
 import { useTheme } from '../../../../contexts/theme/ThemeContext';
 import FormAddCountersData from "../../../../componentsShared/forms/counters/FormAddCountersData";
@@ -64,33 +64,37 @@ const ScreenCounter: React.FC<ScreenCounterPropsTypes> = ({
     const { backgroundColor } = useTheme();
 
     return (
-        <View style={[styles.container, backgroundColor]}>
-            <TextCountersInfo
-                dataCounter={dataCounter}
-                onClickCounter={onClickCounter}
-            />
-            <FormAddCountersData
-                onSubmitForm={saveData}
-                inputOneLabel={dataCounter.name}
-                onePlaceholder={placeholder}
-                onClickInfoOneCounter={openFormUpdateAndInfo}
-                currentOneCurrentMeter={currentReading ? currentReading.data : ''}
-                isLoadingSubmit={isLoaderSaveData}
-                dateReading={currentReading ? currentReading.date : ''}
-            />
-            {/* <ModalWithChildren
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{flex: 1,}}>
+            <View style={[styles.container, backgroundColor]}>
+                <TextCountersInfo
+                    dataCounter={dataCounter}
+                    onClickCounter={onClickCounter}
+                />
+                <FormAddCountersData
+                    onSubmitForm={saveData}
+                    inputOneLabel={dataCounter.name}
+                    onePlaceholder={placeholder}
+                    onClickInfoOneCounter={openFormUpdateAndInfo}
+                    currentOneCurrentMeter={currentReading ? currentReading.data : ''}
+                    isLoadingSubmit={isLoaderSaveData}
+                    dateReading={currentReading ? currentReading.date : ''}
+                />
+                {/* <ModalWithChildren
                 isVisible={isOpenedFormUpdateAndInfo}
                 onClose={closeFormUpdateAndInfo}
                 theme={theme}
             /> */}
-            <FormUpdateCounter
-                isOpen={isOpenedFormUpdateAndInfo}
-                onClose={closeFormUpdateAndInfo}
-                dataCounter={dataCounter}
-                sumbitUpdateCounter={sumbitUpdateCounter}
-                isLoadingUpdateCounter={isLoadingUpdateCounter}
-            />
-        </View>
+                <FormUpdateCounter
+                    isOpen={isOpenedFormUpdateAndInfo}
+                    onClose={closeFormUpdateAndInfo}
+                    dataCounter={dataCounter}
+                    sumbitUpdateCounter={sumbitUpdateCounter}
+                    isLoadingUpdateCounter={isLoadingUpdateCounter}
+                />
+            </View>
+        </KeyboardAvoidingView>
     )
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { BlurView } from '@react-native-community/blur';
 import { View, TouchableOpacity, StyleSheet, Image, Modal, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '../../contexts/theme/ThemeContext';
 
 import imgArrowHider from '../../../images/arrow-down-svgrepo-com.png';
 
@@ -16,12 +17,13 @@ interface ModalWithChildren {
 const ModalWithChildren: React.FC<ModalWithChildren> = ({
     isVisible,
     onClose,
-    theme,
+    //theme,
     childComponent,
 }) => {
 
     // SafeArea
     const insets = useSafeAreaInsets();
+    const { theme } = useTheme();
 
     return (
         <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
@@ -33,7 +35,7 @@ const ModalWithChildren: React.FC<ModalWithChildren> = ({
                 style={styles.container}>
                 <BlurView
                     style={styles.blur}
-                    blurType={"light"}
+                    blurType={theme ? theme : 'regular'}
                     blurAmount={theme === "light" ? 9 : 10}
                     overlayColor="rgba(255,255,255,0.3)"
                 />

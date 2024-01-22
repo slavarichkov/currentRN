@@ -4,17 +4,38 @@ import { useTranslate } from '../../../contexts/translate/TranslateContext';
 import { useGlobal } from '../../../contexts/global/GlobalContext';
 import { TypeCounterInfo } from "../../../screens/counters/types/types";
 import { createMeterCounterRecord } from "../../../utils/db/SQLite/dbMeterReadingSubmission";
+import { sendEmail } from "../../../utils/funtions";
 import ListInfo from "../../../screens/counters/CountersInfoScreen/components/ListInfo";
 import TextInputWithLabelInside from "../../Inputs/TextInputWithLabelInside"
 import ButtonSetting from "../../../screens/setting/GlobalSettingScreen/components/ButtonSetting";
 import ButtonMoreInfo from "../../buttons/ButtonMoreInfo";
+import ModalWithChildren from "../../modals/ModalWithChildren";
+
+interface Reading {
+    data: string;
+    date: string;
+    id: number;
+    idCounter: string;
+}
+
+interface CounterInfo {
+    address: string;
+    closestReading: Reading;
+    costOfaUnitOfMeasurement: string;
+    counterNumber: string;
+    dateOfCounterVerification: string;
+    dateOfCounterVerificationNext: string;
+    id: number;
+    name: string;
+    previousReading: Reading;
+}
 
 interface TypeCounterData extends TypeCounterInfo {
     closestReading?: { key: string; value: string };
     previousReading?: { key: string; value: string };
 }
 interface FormSendAndSaveCountersDataProps {
-    countersData: any[]; // Подставьте тип для countersData
+    countersData: CounterInfo[]; // Подставьте тип для countersData
     onClikNavigationStatisticScreen: () => void;
 }
 
@@ -31,14 +52,43 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
         { nameScreen: 'Gas', nameCounter: 'Газ', data: 'Данные счетчика', date: new Date().toString() },
     ]
 
-    const [currents, setCurrents] = useState<any>(arrayCountersObj)
     const [statistic, setStatistic] = useState<any>([]);
     const [cost, setCost] = useState<string>('0');
     const [backgroundColorContainerInfo, setBackgroundColorContainerInfo] = useState(`backgroundColor: 'rgba(0,0,0,0.1)`)
-    const [isShowMoreInfo, setIsShowMoreInfo] = useState(false);
+    //Инфотул
+    const [isOpenInfoTool, setIsOpenInfoTool] = useState<boolean>(false)
+    const [messageInfoTool, setMessageInfoTool] = useState<string>('');
+    const [isShowMoreInfo, setIsShowMoreInfo] = useState<boolean>(false);
     //Лоадеры
     const [isLoadingSave, setIsLoadingSave] = useState<boolean>(false);
     const [isLoadingSend, setIsLoadingSend] = useState<boolean>(false);
+
+    function getCostAndValue(data, costValue) {
+        const statisticObj: any = { name: data.name };
+        if (data && data.closestReading && data.closestReading.data) {
+            // Ближайшие данные 
+            const closestReading = Number(data.closestReading.data);
+            // Предыдущие данные
+            let previousReading = 0;
+            if (data.previousReading && data.previousReading.data) {
+                previousReading = Number(data.previousReading.data);
+            }
+            // Объем потребления с предыдущих показаний
+            const volume = closestReading - previousReading;
+            statisticObj.volume = volume.toFixed(3);
+            //Стоимость
+            const cost = volume * Number(data.costOfaUnitOfMeasurement);
+            statisticObj.cost = cost.toFixed(3);
+            if (costValue) {
+                costValue = cost + costValue;
+            }
+        } else {
+            statisticObj.volume = '0';
+            statisticObj.cost = '0';
+        }
+        return statisticObj;
+
+    }
 
     /**
      * Асинхронно получает статистику по счетчикам и устанавливает ее в состояние.
@@ -102,7 +152,10 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
         const newArray = countersData.map(item => {
             const meterReading: any = { currentReading: item.closestReading.data };
             const closestReading = Number(item.closestReading.data);
-            const previousReading = Number(item.previousReading.data);
+            let previousReading = 0;
+            if (item.previousReading && item.previousReading.data) {
+                previousReading = Number(item.previousReading.data);
+            }
             const volume = closestReading - previousReading;
             meterReading.volume = volume.toFixed(3);
             const cost = volume * Number(item.costOfaUnitOfMeasurement);
@@ -135,6 +188,44 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
         catch (err) {
             setIsLoadingSave(false);
         }
+    }
+
+    /** Отправить данные счетчиков */
+    function onSendReadings() {
+        if (address) {
+
+            const recipient = address.email;
+            const subject = `${selectedTranslations.subjectReadingsEmail} ${address.street} ${address.building} ${address.apartment}`
+            const newArray = countersData.map((item1) => {
+                const correspondingItem = selectedTranslations.arrayUnitsOfMeasurement.find((item2: any) => item2.name === item1.name);
+                if (correspondingItem) {
+                    return {
+                        nameCounter: correspondingItem.nameCounter,
+                        data: item1.closestReading.data,
+                    };
+                }
+                return null; // или верните объект по умолчанию, если не найдено соответствие
+            }).filter(Boolean);
+            const body = newArray.reduce((acc: any, item) => {
+                const dataCounter = `${item?.nameCounter}: ${item?.data}, `
+                return acc + dataCounter;
+            }, '');
+            //await onSave();
+            sendEmail('v.v.richkov@mail.ru', "subject.toString()", "body.toString()", () => {
+                const info = `${selectedTranslations.messageErrorSendReadings} ${address?.email}`
+                openInfoTool(info)
+            });
+        }
+    }
+
+    function openInfoTool(text: string) {
+        setIsOpenInfoTool(true); 
+        setMessageInfoTool(text);
+    }
+
+    function closeInfoTool(){
+        setIsOpenInfoTool(false); 
+        setMessageInfoTool('');
     }
 
     function openStatisticsInfo() {
@@ -191,8 +282,15 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
             <View style={[styles.containerButtons, { backgroundColor: 'rgba(0,0,0,0.3)' }]}>
                 <ButtonSetting text={selectedTranslations.save} onClick={onSave} isLoading={isLoadingSave} sizeLoader={'small'} />
                 <Text style={styles.textNameButtonContainer}>{''}</Text>
-                <ButtonSetting text={selectedTranslations.send} onClick={() => { }} isLoading={isLoadingSend} sizeLoader={'small'} />
+                <ButtonSetting text={selectedTranslations.send} onClick={onSendReadings} isLoading={isLoadingSend} sizeLoader={'small'} />
             </View>
+            <ModalWithChildren
+                isVisible={isOpenInfoTool}
+                onClose={closeInfoTool}
+                childComponent ={
+                    <Text style={[styles.messageInfoTool]}>{messageInfoTool}</Text>
+                }
+            />
         </View>
     )
 }
@@ -201,7 +299,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         //justifyContent: 'space-between',
-        paddingTop: 10,
+        paddingTop: 20,
         paddingBottom: 170,
     },
     containerInfo: {
@@ -230,6 +328,11 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-between',
         flexDirection: 'row'
+    },
+    messageInfoTool:{
+        fontSize: 15,
+        fontWeight: '500',
+        color: 'rgba(0,0,0,1)',
     }
 })
 

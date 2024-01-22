@@ -33,7 +33,10 @@ function Main() {
     const insets = useSafeAreaInsets();
     //Контекст
     const { selectedTranslations } = useTranslate();
-    const { backgroundColor } = useTheme();
+    const { backgroundColor, theme } = useTheme();
+
+    const activeTintColor = theme === 'light' ? '#000000' : '#ffffff';
+    const tintColor = theme === 'light' ? '#000000' : 'rgba(255, 255, 255,0.5)';
 
     return (
         <View style={[styles.container, backgroundColor]}>
@@ -53,9 +56,9 @@ function Main() {
                         borderTopWidth: 0, // Устанавливаем толщину верхней границы в 0, чтобы убрать рамку
                         elevation: 0, // Устанавливаем тень в 0, чтобы убрать тень (для Android)
                     },
-                    tabBarActiveTintColor: '#000000',
+                    tabBarActiveTintColor: activeTintColor,
                     tabBarBackground: () => (
-                        <BlurView blurType={'light'}
+                        <BlurView blurType={theme ? theme : 'light'}
                             blurAmount={10}
                             style={{
                                 ...StyleSheet.absoluteFill,
@@ -75,13 +78,13 @@ function Main() {
                         tabBarIcon: ({ color }) => (
                             <Image
                                 source={imgHome}
-                                style={{ width: 29, height: 29, tintColor: 'rgba(0,0,0,0.5)' }}
+                                style={{ width: 29, height: 29, tintColor: tintColor }}
                             />
                         ),
                         headerShown: false, // Полностью скрыть верхний заголовок экрана
                     }}
                 />
-                 <Tab.Screen
+                <Tab.Screen
                     name="Settings"
                     component={SettingNavigator}
                     options={{
@@ -89,7 +92,7 @@ function Main() {
                         tabBarIcon: ({ color }) => (
                             <Image
                                 source={imgSetting}
-                                style={{ width: 29, height: 29, tintColor: 'rgba(0,0,0,0.5)' }}
+                                style={{ width: 29, height: 29, tintColor: tintColor }}
                             />
                         ),
                         headerShown: false, // Полностью скрыть верхний заголовок экрана
@@ -97,14 +100,13 @@ function Main() {
                 />
             </Tab.Navigator>
 
-        </View>
+        </View >
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
         paddingTop: 50,
     }
 });

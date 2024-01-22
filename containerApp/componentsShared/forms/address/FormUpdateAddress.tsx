@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 //Контекст
 import { useTranslate } from '../../../contexts/translate/TranslateContext';
+import { useTheme } from '../../../contexts/theme/ThemeContext';
 
 import { regexStrokeInput, regexEmailEn } from '../../../utils/regex';
 import { TypeAddressData } from '../../../utils/types/addressTypes';
@@ -25,6 +26,7 @@ const FormUpdateAddress: React.FC<FormProps> = ({
 }) => {
 
     const { selectedTranslations } = useTranslate();
+    const { theme } = useTheme();
 
     const [nameAddress, setNameAddress] = useState<string>('');
     const [city, setCity] = useState<string>('');
@@ -122,7 +124,7 @@ const FormUpdateAddress: React.FC<FormProps> = ({
 
     //Валидация
     useEffect(() => {
-       
+
         //Проверка на изменения в строках
         if (email !== address.email || nameAddress !== address.name || city !== address.city || street !== address.street || building !== address.building || apartment !== address.apartment || JSON.stringify(arrayCountersName) !== address.arrayCountersName) {
             // Функция проверки соответствия строки регулярному выражению
@@ -163,6 +165,8 @@ const FormUpdateAddress: React.FC<FormProps> = ({
                 value={nameAddress}
                 onChangeText={setNameAddress}
                 maxLength={70}
+                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
                 forwardedRef={inputNameRef}
                 handleInputSubmit={handleInputNameAddressSubmit}
                 returnKeyType={'next'}
@@ -175,6 +179,8 @@ const FormUpdateAddress: React.FC<FormProps> = ({
                 maxLength={70}
                 forwardedRef={inputCityRef}
                 handleInputSubmit={handleInputCitySubmit}
+                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
                 returnKeyType={'next'}
             />
             <TextInputWithLabelInside
@@ -185,6 +191,8 @@ const FormUpdateAddress: React.FC<FormProps> = ({
                 maxLength={170}
                 forwardedRef={inputStreetRef}
                 handleInputSubmit={handleInputStreetSubmit}
+                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
                 returnKeyType={'next'}
             />
             <TextInputWithLabelInside
@@ -196,6 +204,8 @@ const FormUpdateAddress: React.FC<FormProps> = ({
                 keyboardType="numeric"
                 forwardedRef={inputBuildingRef}
                 handleInputSubmit={handleInputBuildingSubmit}
+                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
                 returnKeyType={'next'}
             />
             <TextInputWithLabelInside
@@ -207,6 +217,8 @@ const FormUpdateAddress: React.FC<FormProps> = ({
                 keyboardType="numeric"
                 forwardedRef={inputApartmentRef}
                 handleInputSubmit={handleInputApartmentSubmit}
+                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
                 returnKeyType={'next'}
             />
             <TextInputWithLabelInside
@@ -218,6 +230,8 @@ const FormUpdateAddress: React.FC<FormProps> = ({
                 keyboardType="email-address"
                 forwardedRef={inputEmailRef}
                 handleInputSubmit={handleInputEmailSubmit}
+                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
                 returnKeyType={'done'}
             />
             <View style={styles.containerButtonSubmit}>

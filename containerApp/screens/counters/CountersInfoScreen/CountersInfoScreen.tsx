@@ -41,7 +41,6 @@ const CountersInfoScreen = ({ navigation }) => {
             const updateData = data.map((item) => {
                 return { closest: { ...item } }
             })
-            console.log(updateData)
             return updateData;
         } else if (data.length < 1) {
             return [];
@@ -67,7 +66,6 @@ const CountersInfoScreen = ({ navigation }) => {
                     }
                 });
             });
-
             return closestDates;
         }
     }
@@ -84,7 +82,7 @@ const CountersInfoScreen = ({ navigation }) => {
                 const arrayNearestReadings = await findClosestDates(counterReading);
                 if (arrayNearestReadings.length > 0) {
                     counterData.closestReading = arrayNearestReadings[0].closest;
-                    if (counterData.previousReading) {
+                    if (arrayNearestReadings[1]) {
                         counterData.previousReading = arrayNearestReadings[1].later;
                     }
                 }
@@ -97,10 +95,6 @@ const CountersInfoScreen = ({ navigation }) => {
     function onClikNavigationStatisticScreen() {
         navigation.navigate('StatisticsCountersScreen')
     }
-
-    useEffect(() => {
-        // fillCountersInfo();
-    }, [address])
 
     // будет выполняться при каждом фокусе на экране
     useFocusEffect(

@@ -1,3 +1,5 @@
+import { Linking } from "react-native";
+
 /**
  * Форматирует дату в строке в локализованный русский формат.
  *
@@ -18,4 +20,34 @@ function formatDate(inputDate: string) {
     return formattedDate;
 }
 
-export { formatDate }
+/**
+ * Отправляет электронное письмо через почтовый клиент устройства.
+ *
+ * @param {string} recipient - Адрес получателя.
+ * @param {string} subject - Тема письма.
+ * @param {string} body - Текст письма.
+ * @param {() => void} errCallback - Callback, вызываемый в случае ошибки.
+ * @returns {Promise<void>} Промис, который разрешается после выполнения операции.
+ *
+ * @example
+ * sendEmail('recipient@example.com', 'Subject', 'Hello, Body!', () => {
+ *   console.log('Error callback');
+ * });
+ */
+const sendEmail = async (
+    recipient: string,
+    subject: string,
+    body: string,
+    errCallback: () => void) => {
+
+    let mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+
+    try {
+        await Linking.openURL(mailtoUrl);
+    } catch (error) {
+        console.error('Произошла ошибка при открытии почтового клиента:', error);
+        errCallback();
+    }
+};
+
+export { formatDate, sendEmail }

@@ -113,15 +113,15 @@ const createMeterCounterRecord = async (data: { date: string, meterReadings: str
 };
 
 /**
- * Асинхронно ищет все записи в таблице 'meterReadingSubmission' по указанному идентификатору счетчика.
+ * Асинхронно ищет все записи в таблице 'meterReadingSubmission' по указанному идентификатору адреса.
  *
- * @param {string} idAddress - Идентификатор счетчика, для которого нужно найти записи.
+ * @param {string} idAddress - Идентификатор адреса, для которого нужно найти записи.
  * @returns {Promise<Array<TypeCounterMeters>>} Промис, который разрешается массивом объектов записей или [], если записей не найдено.
  * @throws {Error} Ошибка в случае проблем с выполнением запроса.
  *
  * @example
  */
-async function findRecordsByIdCounter(idAddress: string): Promise<Array<TypeCounterMeters>> {
+async function findRecordsByIdAddress(idAddress: string): Promise<Array<TypeCounterMeters>> {
     try {
         let db = dbInit;
         if (dbInit === undefined) {
@@ -176,7 +176,7 @@ async function findRecordsByIdCounter(idAddress: string): Promise<Array<TypeCoun
  *   }
  * );
  */
-const deleteMeterCounterRecordById = async (id: string, callback: () => void): Promise<void> => {
+const deleteMeterCounterRecordById = async (id: string, callback: () => void, errCallback:() => void, ): Promise<void> => {
     try {
         let db = dbInit;
         if (dbInit === undefined) {
@@ -194,6 +194,7 @@ const deleteMeterCounterRecordById = async (id: string, callback: () => void): P
                     },
                     (_, error: any) => {
                         console.error("Ошибка при удалении записи из таблицы 'meterReadingSubmission':", error);
+                        return "Ошибка при удалении записи из таблицы 'meterReadingSubmission";
                     }
                 );
             },
@@ -214,6 +215,6 @@ const deleteMeterCounterRecordById = async (id: string, callback: () => void): P
 export {
     openOrCreateDatabaseMeterCounterRecord,
     createMeterCounterRecord,
-    findRecordsByIdCounter,
+    findRecordsByIdAddress,
     deleteMeterCounterRecordById
 };

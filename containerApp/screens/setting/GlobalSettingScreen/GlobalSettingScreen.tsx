@@ -17,13 +17,13 @@ function GlobalSettingScreen() {
             {/* Выбор темы */}
             <View style={[styles.containerButtons, { backgroundColor: 'rgba(0,0,0,0.3)' }]}>
                 <ButtonSetting text={selectedTranslations.lightThemeButtonName} onClick={() => changeTheme('light')} />
-                <Text style={styles.textNameButtonContainer}>{selectedTranslations.buttonNameTheme}</Text>
+                <Text style={[styles.textNameButtonContainer, colorText]}>{selectedTranslations.buttonNameTheme}</Text>
                 <ButtonSetting text={selectedTranslations.darkThemeButtonName} onClick={() => changeTheme('dark')} />
             </View>
             {/* Выбор Языка */}
             <View style={[styles.containerButtons, { backgroundColor: 'rgba(0,0,0,0.3)' }]}>
                 <ButtonSetting text={selectedTranslations.en} onClick={() => changeLocaleUser('en')} />
-                <Text style={styles.textNameButtonContainer}>{selectedTranslations.buttonNameLanguage}</Text>
+                <Text style={[styles.textNameButtonContainer, colorText]}>{selectedTranslations.buttonNameLanguage}</Text>
                 <ButtonSetting text={selectedTranslations.ru} onClick={() => changeLocaleUser('ru')} />
             </View>
         </View>

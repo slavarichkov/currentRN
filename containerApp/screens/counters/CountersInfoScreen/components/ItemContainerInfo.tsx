@@ -28,9 +28,12 @@ const ItemContainerInfo: React.FC<ItemContainerInfoProps> = ({ dataCounter }) =>
 
     function getCost() {
         let cost = '0';
-        if (dataCounter && dataCounter.closestReading && dataCounter.previousReading) {
+        if (dataCounter && dataCounter.closestReading) {
             const closestReading = Number(dataCounter.closestReading.data);
-            const previousReading = Number(dataCounter.previousReading.data);
+            let previousReading = 0;
+            if (dataCounter.previousReading && dataCounter.previousReading.data) {
+                previousReading = Number(dataCounter.previousReading.data);
+            }
             const volume = closestReading - previousReading;
             cost = (volume * Number(dataCounter.costOfaUnitOfMeasurement)).toString();
         }
@@ -39,9 +42,12 @@ const ItemContainerInfo: React.FC<ItemContainerInfoProps> = ({ dataCounter }) =>
 
     function getVolume() {
         let volume = '0';
-        if (dataCounter.closestReading && dataCounter.previousReading) {
+        if (dataCounter.closestReading) {
             const closestReading = Number(dataCounter.closestReading.data);
-            const previousReading = Number(dataCounter.previousReading.data);
+            let previousReading = 0;
+            if (dataCounter.previousReading && dataCounter.previousReading.data) {
+                previousReading = Number(dataCounter.previousReading.data);
+            }
             volume = (closestReading - previousReading).toString();
         }
         return volume;

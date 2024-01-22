@@ -27,7 +27,7 @@ interface TypesTextInputWithLabelInside {
     placeholder?: string,
     value: string | number,
     onChangeText: (value: string) => void,
-    onClickInput: () => void,
+    onClickInput?: () => void,
     maxLength?: number,
     placeholderTextColor?: string,
     keyboardType?: KeyboardType,
@@ -40,6 +40,7 @@ interface TypesTextInputWithLabelInside {
     returnKeyType?: ReturnKeyType,
     onClickInfo?: () => void,
     dateReading?: string,
+    styleColorText?: string,
 }
 
 const TextInputWithLabelInside: React.FC<TypesTextInputWithLabelInside> = ({
@@ -58,6 +59,7 @@ const TextInputWithLabelInside: React.FC<TypesTextInputWithLabelInside> = ({
     forwardedRef,
     handleInputSubmit,
     returnKeyType,
+    styleColorText,
 }) => {
     let inputRef = useRef(null);
 
@@ -83,11 +85,11 @@ const TextInputWithLabelInside: React.FC<TypesTextInputWithLabelInside> = ({
     return (
         <TouchableOpacity onPress={onPressInput} style={styles.containerInput}>
             {label !== '' ?
-                <Text style={styles.label}>{label}</Text>
+                <Text style={[styles.label, { color: placeholderTextColor? placeholderTextColor :'rgba(255,255,255,0.7)' } ]}>{label}</Text>
                 : <></>}
             <TextInput
                 ref={inputRef}
-                style={[styles.input, colorText]}
+                style={[styles.input, styleColorText ? { colorText: styleColorText } : colorText]}
                 placeholder={placeholder}
                 value={value}
                 onChangeText={onChangeText}

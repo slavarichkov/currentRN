@@ -68,7 +68,7 @@ const ColdWaterCounetrsScreen = () => {
      */
     async function saveData(data: { inputOne?: string, inputTwo?: string }) {
         try {
-            //setIsLoaderSaveData(true);
+            setIsLoaderSaveData(true);
             const saveReading = async (inputData: string, currentCounter: TypeCounterInfo) => {
                 if (inputData && currentCounter?.id) {
                     const dataReading = {
@@ -84,7 +84,6 @@ const ColdWaterCounetrsScreen = () => {
                     });
                 }
             };
-            console.log(data.inputOne, coldWaterCurrent)
             if (data.inputOne && coldWaterCurrent) {
                 await saveReading(data.inputOne, coldWaterCurrent);
             }
@@ -176,7 +175,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        justifyContent: 'space-between',
         alignItems: 'center',
     },
 })
