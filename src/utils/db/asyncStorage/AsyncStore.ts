@@ -130,7 +130,7 @@ const saveSelectedThemeAsyncStore = async (theme: string) => {
 };
 
 /**  Функция для получения текущей темы */
-const getSelectedThemeAsyncStore = async (): Promise<'light' | 'dark'> => {
+const getSelectedThemeAsyncStore = async (): Promise<'light' | 'dark' | string> => {
     try {
         let theme = await AsyncStorage.getItem('selected_theme');
         let currentDeviceTheme = Appearance.getColorScheme();
@@ -154,6 +154,60 @@ const getSelectedThemeAsyncStore = async (): Promise<'light' | 'dark'> => {
     }
 };
 
+/** Функция добавления дополнительных опций стоимости у счетчиков: например, водоотведение у воды. Хранит массив объектов - название счетчика, доп стоимость 
+ * @param {string} counterName - название счетчика
+ * @param {string} additionalCost - дополнительная стоимость 
+*/
+const addAdditionalCostOptionAsyncStore = async (counterName: string, additionalCost: string) => {
+    try {
+        // Получаем текущий массив из AsyncStorage (если он существует)
+        const existingOptions = await AsyncStorage.getItem('additionalCostOptions');
+        const optionsArray = existingOptions ? JSON.parse(existingOptions) : [];
+
+        // Проверяем, существует ли уже опция для данного счетчика
+        const existingOptionIndex = optionsArray.findIndex((option: any) => option.counterName === counterName);
+
+        if (existingOptionIndex !== -1) {
+            // Если опция существует, обновляем её
+            optionsArray[existingOptionIndex] = { counterName, additionalCost };
+        } else {
+            // Если опции нет, добавляем новую
+            optionsArray.push({ counterName, additionalCost });
+        }
+
+        // Сохраняем обновленный массив в AsyncStorage
+        await AsyncStorage.setItem('additionalCostOptions', JSON.stringify(optionsArray));
+
+        console.log('Дополнительная опция стоимости успешно добавлена.');
+    } catch (error) {
+        console.error('Ошибка при добавлении дополнительной опции стоимости:', error);
+    }
+};
+
+/** Функция добавления дополнительных опций стоимости у счетчиков: например, водоотведение у воды. Хранит массив объектов - название счетчика, доп стоимость */
+const getAdditionalCostOptionAsyncStore = async (counterName: string) => {
+    try {
+        // Получаем текущий массив из AsyncStorage (если он существует)
+        const existingOptions = await AsyncStorage.getItem('additionalCostOptions');
+        const optionsArray = existingOptions ? JSON.parse(existingOptions) : [];
+        let findedCostOptions = 0;
+
+        // Проверяем, существует ли уже опция для данного счетчика
+        const existingOptionIndex = optionsArray.findIndex((option: any) => option.counterName === counterName);
+
+        if (existingOptionIndex !== -1) {
+            // Если опция существует, обновляем её
+            findedCostOptions = optionsArray[existingOptionIndex].additionalCost;
+            return findedCostOptions;
+        } else {
+            return undefined;
+        }
+
+    } catch (error) {
+        console.error('Ошибка при добавлении дополнительной опции стоимости:', error);
+    }
+};
+
 export {
     saveLocaleToAsyncStorage, // Функция для сохранения значения "locale" в Async Storage
     getLocaleFromAsyncStorage, // Функция для получения значения "locale" из Async Storage
@@ -163,4 +217,6 @@ export {
     getCounterNamesFromAsyncStorage,
     saveSelectedThemeAsyncStore,
     getSelectedThemeAsyncStore,
+    addAdditionalCostOptionAsyncStore,
+    getAdditionalCostOptionAsyncStore,
 };

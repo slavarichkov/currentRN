@@ -81,6 +81,7 @@ const translates: Translates = {
         currency: 'руб',
         arrayUnitsOfMeasurement: [{ name: 'Горячая вода', value: 'м3', nameCounter: 'Горячая вода' }, { name: 'Холодная вода', value: 'м3', nameCounter: 'Холодная вода' }, { name: 'Электричество', value: 'кВт/ч', nameCounter: 'Электричество' }, { name: 'Отопление', value: 'кКал', nameCounter: 'Отопление' }, { name: 'Газ', value: 'м3', nameCounter: 'Газ' }],
         cost: 'Стоимость',
+        additionalСost: 'Доп стоимость',
         totalCost: 'Итого',
         moreInfo: 'Подробнее',
         volume: 'Количество',
@@ -159,6 +160,7 @@ const translates: Translates = {
             { name: 'Газ', value: 'm3', nameCounter: 'Gas' }
         ],
         cost: 'Cost',
+        additionalСost: 'Additional cost',
         totalCost: 'Total',
         moreInfo: 'More Info',
         volume: 'Volume',

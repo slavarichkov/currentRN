@@ -11,6 +11,7 @@ import { useTheme } from "../../../../contexts/theme/ThemeContext";
 import { TypeCounterInfo } from "../../types/types";
 
 import { regexStrokeInput } from "../../../../utils/regex";
+import { addAdditionalCostOptionAsyncStore, getAdditionalCostOptionAsyncStore } from "../../../../utils/db/asyncStorage/AsyncStore";
 
 interface FormUpdateCounter {
     isOpen: boolean,
@@ -35,28 +36,39 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
     const [isShowDateOfCounterVerification, setShowdateOfCounterVerification] = useState<boolean>(false);
     const [dateOfCounterVerificationNext, setDateOfCounterVerificationNext] = useState<Date>(new Date());
     const [cost, setCost] = useState<any>('');
+    const [additionalCost, setAdditionalCost] = useState<string>('0');
+    const [initAdditionalCost, setInitAdditionalCost] = useState<string>('0');
+    const [summaryCost, setSummaryCost] = useState<string>('0');
     const [isShowDateOfCounterVerificationNext, setShowDateOfCounterVerificationNext] = useState<boolean>(false);
     const [numberCounter, setNumberCounter] = useState<string>('');
     const [isValidForm, setValidForm] = useState<boolean>(false);
+    const [isAdditionalCost, setIsAdditionalCost] = useState<boolean>(false);
 
-    function onUpdate() {
+    async function onUpdate() {
         if (isValidForm) {
             const updateObj = {
                 id: dataCounter.id.toString(),
                 name: dataCounter.name,
                 address: dataCounter.address,
                 counterNumber: numberCounter,
-                costOfaUnitOfMeasurement: cost.toString(),
+                costOfaUnitOfMeasurement: isAdditionalCost ? summaryCost.toString() : cost.toString(),
                 dateOfCounterVerification: dateOfCounterVerification.toString(),
                 dateOfCounterVerificationNext: dateOfCounterVerificationNext.toString(),
             }
-            sumbitUpdateCounter(updateObj)
+            if (isAdditionalCost) {
+                await addAdditionalCostOptionAsyncStore(dataCounter.name, additionalCost.toString());
+            }
+            sumbitUpdateCounter(updateObj);
         }
     }
 
     function replaceCommasWithDots(inputString: string) {
         const input = inputString.toString();
-        return input.replace(/,/g, '.');
+
+        // Заменяем все запятые и точки на одну точку
+        const replacedString = input.replace(/[,\.]+/g, '.');
+
+        return replacedString;
     }
 
     function getCost(cost: string) {
@@ -64,10 +76,40 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
         setCost(costData);
     }
 
-    // useEffect(()=>{
-    //     const update = replaceCommasWithDots(cost);
-    //     setCost(update);
-    // },[cost])
+    function getAdditionalCost(additionalCost: string) {
+        const additionaCostData = replaceCommasWithDots(additionalCost.toString());
+        setAdditionalCost(additionaCostData);
+    }
+
+    useEffect(() => {
+        const update = replaceCommasWithDots(cost);
+        setCost(update);
+        if (isAdditionalCost) {
+            const update = replaceCommasWithDots(cost);
+            setCost(update);
+        }
+        if (isAdditionalCost) {
+            const summary = Number(cost) + Number(additionalCost);
+            setSummaryCost(summary.toFixed(2));
+        }
+    }, [cost, additionalCost])
+
+    async function getAdditionalCosts() {
+        const arrayIsAdditionalCost = ['Горячая вода', 'Холодная вода']
+        const isCheckAdditionalCost = arrayIsAdditionalCost.includes(dataCounter.name);
+        setIsAdditionalCost(isCheckAdditionalCost);
+        if (isCheckAdditionalCost) {
+            const findedAdditionalCost = await getAdditionalCostOptionAsyncStore(dataCounter.name);
+            let optionCost = '0';
+            if (!findedAdditionalCost) {
+                await addAdditionalCostOptionAsyncStore(dataCounter.name, additionalCost.toString());
+            } else {
+                optionCost = findedAdditionalCost.toString();
+            }
+            setInitAdditionalCost(optionCost);
+            setAdditionalCost(optionCost);
+        }
+    }
 
     useEffect(() => {
 
@@ -87,6 +129,8 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
             setDateOfCounterVerificationNext(new Date(dataCounter.dateOfCounterVerificationNext))
         }
 
+        getAdditionalCosts();
+
     }, [dataCounter])
 
     //Валидация
@@ -95,11 +139,14 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
             if (dateOfCounterVerification.toString() !== dataCounter.dateOfCounterVerification ||
                 cost.toString() !== dataCounter.costOfaUnitOfMeasurement ||
                 dateOfCounterVerificationNext.toString() !== dataCounter.dateOfCounterVerificationNext ||
-                numberCounter !== dataCounter.counterNumber) {
-                if (regexStrokeInput.test(numberCounter) && numberCounter !== '') {
-                    setValidForm(true);
-                } else {
+                numberCounter !== dataCounter.counterNumber
+                || additionalCost !== initAdditionalCost
+            ) {
+                if (!regexStrokeInput.test(numberCounter) || !regexStrokeInput.test(cost) || !regexStrokeInput.test(additionalCost)
+                    || numberCounter === '' || cost === '' || additionalCost === '') {
                     setValidForm(false);
+                } else {
+                    setValidForm(true);
                 }
 
             } else {
@@ -107,14 +154,13 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
             }
         }
 
-    }, [dataCounter, cost, dateOfCounterVerification, dateOfCounterVerification, numberCounter])
+    }, [dataCounter, cost, dateOfCounterVerification, dateOfCounterVerification, numberCounter, initAdditionalCost, additionalCost])
 
 
     return (
         <ModalWithChildren
             isVisible={isOpen}
             onClose={onClose}
-            isHiddeButtonUpdateAndRemove={true}
             childComponent={
                 <View style={styles.container}>
                     < View style={styles.containerInput} >
@@ -160,6 +206,35 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
                             keyboardType={'numeric'}
                         />
                     </View >
+                    {isAdditionalCost ?
+                        <>
+                            < View style={styles.containerInput} >
+                                <TextInputWithLabelInside
+                                    label={selectedTranslations.additionalСost}
+                                    placeholder={selectedTranslations.additionalСost}
+                                    value={additionalCost}
+                                    onChangeText={getAdditionalCost}
+                                    maxLength={70}
+                                    placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                    styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                    keyboardType={'numeric'}
+                                />
+                            </View >
+                            < View style={styles.containerInput} >
+                                <TextInputWithLabelInside
+                                    label={selectedTranslations.totalCost}
+                                    placeholder={selectedTranslations.totalCost}
+                                    value={summaryCost}
+                                    onChangeText={setSummaryCost}
+                                    onClickInput={() => { }}
+                                    maxLength={70}
+                                    placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                    styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                    keyboardType={'numeric'}
+                                />
+                            </View >
+                        </>
+                        : <></>}
                     <View style={styles.buttonSubmit}>
                         <Button
                             text={selectedTranslations.update}
