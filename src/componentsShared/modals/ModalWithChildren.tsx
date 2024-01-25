@@ -35,7 +35,7 @@ const ModalWithChildren: React.FC<ModalWithChildren> = ({
                 style={styles.container}>
                 <BlurView
                     style={styles.blur}
-                    blurType={theme ? theme : 'regular'}
+                    blurType={theme ? theme : 'light'}
                     blurAmount={theme === "light" ? 9 : 10}
                     overlayColor="rgba(255,255,255,0.3)"
                 />
