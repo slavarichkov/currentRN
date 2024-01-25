@@ -6,9 +6,10 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import messaging from '@react-native-firebase/messaging';
 import { TranslateContextProvider } from './src/contexts/translate/TranslateContext';
 import { GlobalContextProvider } from './src/contexts/global/GlobalContext';
 import { ThemeContextProvider } from './src/contexts/theme/ThemeContext';
@@ -25,6 +26,11 @@ function App(): React.JSX.Element {
   const [barStyle, setbarStyle] = useState<string>('light-content');
   const [navigatorTheme, setNavigatorTheme] = useState<any>(DefaultTheme);
 
+  //Слушать пуш 
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+  });
+
   useEffect(() => {
     getSelectedThemeAsyncStore().then((theme: 'light' | 'dark') => setTheme(theme))
   }, [])
@@ -35,8 +41,8 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
 
-    let backgroundColor = theme === 'dark' ? "black" : "white";
-    let barStale = theme === 'dark' ? "light-content" : "dark-content";
+    let backgroundColor = theme === 'light' ? "gray" : "gray";
+    let barStale = theme === 'light' ? "light-content" : "dark-content";
     setBackgroundColor(backgroundColor);
     setbarStyle(barStale);
 
@@ -69,6 +75,7 @@ function App(): React.JSX.Element {
         <TranslateContextProvider>
           <GlobalContextProvider>
             <NavigationContainer theme={navigatorTheme}>
+              <StatusBar backgroundColor={theme === 'light' ? 'gray' : '#333b42'} barStyle={theme === 'light' ? 'dark-content' : 'light-content'} />
               <Main />
             </NavigationContainer>
           </GlobalContextProvider>
