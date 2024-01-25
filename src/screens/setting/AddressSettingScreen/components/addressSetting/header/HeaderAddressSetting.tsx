@@ -100,7 +100,7 @@ const HeaderAddressSetting = () => {
                 <Text style={[styles.switcherText, colorText]}>{selectedTranslations.remindNotifications}</Text>
             </View>
             <Text style={[styles.subTitle, colorText]}>{selectedTranslations.addresses}</Text>
-            <Text style={[styles.instrucetion, colorText]}>{selectedTranslations.remindNotifications}</Text>
+            <Text style={[styles.instrucetion, colorText]}>{selectedTranslations.instructionAddress}</Text>
             <ModalWithChildren
                 isVisible={isOpenInfoTool}
                 onClose={() => setIsOpenInfoTool(false)}
