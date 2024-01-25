@@ -3,9 +3,10 @@ import { StyleSheet, View } from "react-native";
 import Selector from "../Selector";
 
 import imgWater from '../../../../images/drop-svgrepo-com.png';
+import imgHotWater from '../../../../images/drop-hot-water-svgrepo-com.png';
 import imgElectrocity from '../../../../images/electricity-svgrepo-com.png';
-import imgHeat from '../../../../images/radiators-heat-svgrepo-com.png';
-import imgGas from '../../../../images/gas-burner-svgrepo-com.png';
+import imgHeat from '../../../../images/radiator-svgrepo-com.png';
+import imgGas from '../../../../images/fire-svgrepo-com.png';
 
 interface CountersSelectorProps {
     initalState?: string[];
@@ -95,7 +96,7 @@ const CountersSelector: React.FC<CountersSelectorProps> = ({ initalState, handle
                 onClickThree={() => onCountersChanged('Электричество')}
                 onClickFour={() => onCountersChanged('Отопление')}
                 onClickFive={() => onCountersChanged('Газ')}
-                imgOne={imgWater} imgTwo={imgWater} imgThree={imgElectrocity} imgFour={imgHeat} imgFive={imgGas}
+                imgOne={imgWater} imgTwo={imgHotWater} imgThree={imgElectrocity} imgFour={imgHeat} imgFive={imgGas}
                 styleWidth={'100%'}
                 styleButtonOne={getState('Холодная вода') ? styles.buttonActive : styles.button}
                 styleButtonTwo={getState('Горячая вода') ? styles.buttonActive : styles.button}
