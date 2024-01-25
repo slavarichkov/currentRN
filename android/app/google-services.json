@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "894380513446",
+    "project_id": "meterreadings-da40d",
+    "storage_bucket": "meterreadings-da40d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894380513446:android:e189b0cdba8ad44b28bc67",
+        "android_client_info": {
+          "package_name": "com.slavarichkov.meterreadings"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW1EsMpOLs1EIf8L3l3kbs5YOZzJ7GrDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

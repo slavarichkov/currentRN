@@ -7,6 +7,10 @@ import {
 } from '../../utils/db/SQLite/dbAddress';
 import { TypeAddress, TypeAddressData } from '../../utils/types/addressTypes';
 import { openOrCreateDatabaseMeterCounterRecord } from '../../utils/db/SQLite/dbMeterReadingSubmission';
+import apiUser from '../../utils/api/apiUser';
+import { getToken, getUserId, saveUserId } from '../../utils/db/secureStore/SecureStore';
+import { generateAndSaveDeviceId, getDeviceId } from '../../utils/db/asyncStorage/AsyncStore';
+import { Platform } from 'react-native';
 
 /**
      * Контекст для работы с общей информацией: адрес.
@@ -41,6 +45,13 @@ export const GlobalContextProvider = ({ children }) => {
     const [address, setAddress] = useState<TypeAddressData | TypeAddress>();
     const [addressesArray, setAddresses] = useState<TypeAddressData[]>([]);
     const [counterNamesArray, setCounters] = useState<string[]>([]);
+    // Пользователь
+    const [auth, setAuth] = useState(false);
+    const [userData, setUserData] = useState({}); // объект данных о юзере
+    const [handleChangeUserData, setHandleChangeUserData] = useState(false); // слушатель изменений для перерисовки
+    // Лоадеры
+    const [statusAuthLoading, setStatusAuthLoading] = useState<"starting" | "completed">('starting');
+
     const currentLocale = Localization.getLocales()[0].languageCode;
 
     const firstAddress = currentLocale.includes('ru') ? firstAddressRu : firstAddressEn;
@@ -99,6 +110,37 @@ export const GlobalContextProvider = ({ children }) => {
         setAddresses(updateArray);
     }
 
+    async function getAuth() {
+        try {
+            setStatusAuthLoading('starting');
+            const token = await getToken();
+            let idUser = await getUserId();
+            console.log(`idUser ${idUser}`);
+            if (!idUser) {
+                await saveUserId('userId');
+                idUser = 'userId';
+            }
+            await generateAndSaveDeviceId();
+            const deviceId = await getDeviceId();
+            // Получить данные о пользователе и проверить авторизацию
+            const userData = await apiUser.getSelfUser(token, idUser, deviceId);
+            const platform = Platform.OS;
+            await apiUser.getLocaleAndPlatformUserApp(token, idUser, currentLocale, platform, deviceId);
+            setUserData(userData.user);
+            setAuth(true);
+            setStatusAuthLoading('completed');
+        }
+        catch (err) {
+            console.log(err);
+            setAuth(false);
+        }
+
+    }
+
+    useEffect(() => {
+        getAuth()
+    }, [handleChangeUserData])
+
     useEffect(() => {
         getAddressData();
     }, [])
@@ -108,7 +150,22 @@ export const GlobalContextProvider = ({ children }) => {
     }, [])
 
     return (
-        <GlobalContext.Provider value={{ address, addressesArray, counterNamesArray, pushArrayAddress, updateContextAddressById, updateContextActiveAddress, removeAddress }}>
+        <GlobalContext.Provider value={{
+            auth,
+            setAuth,
+            handleChangeUserData,
+            setHandleChangeUserData,
+            userData,
+            setUserData,
+            statusAuthLoading,
+            address,
+            addressesArray,
+            counterNamesArray,
+            pushArrayAddress,
+            updateContextAddressById,
+            updateContextActiveAddress,
+            removeAddress,
+        }}>
             {children}
         </GlobalContext.Provider>
     )

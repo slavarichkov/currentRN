@@ -216,7 +216,7 @@ const AddressSettingScreen = () => {
         <View style={[styles.container, backgroundColor]}>
             <FlatList
                 data={addressesArray}
-                renderItem={({ item }) => <AddressItem addressData={item} onClick={(item) => onClickItem(item)} />}
+                renderItem={({ item }) => <AddressItem addressData={item} onClick={(item: TypeAddressData) => onClickItem(item)} />}
                 keyExtractor={item => item.id}
                 style={styles.flatList} // Применение стилей к FlatList
                 ListHeaderComponent={() => <HeaderAddressSetting />} // Компонент-заголовок

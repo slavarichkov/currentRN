@@ -27,7 +27,7 @@ const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void
     // const db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
     // Проверяем, существует ли таблица "addresses"
     let db = dbInit;
-    if (dbInit === undefined) {
+    if (dbInit === undefined || db.transaction === undefined) {
         db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
     }
     await db.transaction(
@@ -132,7 +132,7 @@ const createNewAddress = async (addressData: TypeAddress): Promise<TypeAddressDa
     return new Promise(async (resolve, reject) => {
         try {
             let db = dbInit;
-            if (dbInit === undefined) {
+            if (dbInit === undefined || db.transaction === undefined) {
                 db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
             }
             SQLite.enablePromise(true);
@@ -231,7 +231,7 @@ const createNewAddress = async (addressData: TypeAddress): Promise<TypeAddressDa
 async function updateAddressById(updatedAddressData: TypeAddressData): Promise<TypeAddressData> {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
         }
         SQLite.enablePromise(true);
@@ -304,7 +304,7 @@ async function updateAddressById(updatedAddressData: TypeAddressData): Promise<T
 const deleteAddressById = async (addressId: number, successCallback: () => void, errorCallback: (error: any) => void): Promise<void> => {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
         }
         SQLite.enablePromise(true);
@@ -359,7 +359,7 @@ const deleteAddressById = async (addressId: number, successCallback: () => void,
 const getAllAddresses = async (): Promise<Array<TypeAddressData>> => {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "addresses.db", location: 'default' });
         }
         SQLite.enablePromise(true);

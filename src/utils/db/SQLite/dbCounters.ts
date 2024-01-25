@@ -28,7 +28,7 @@ const dbInit = SQLite.openDatabase({ name: "counters.db", location: 'default' })
 const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void): Promise<void> => {
     // Проверяем, существует ли таблица "counters"
     let db = dbInit;
-    if (dbInit === undefined) {
+    if (dbInit === undefined || db.transaction === undefined) {
         db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
     }
     await db.transaction(
@@ -88,7 +88,7 @@ const openOrCreateDatabase = async (succeffullCallBack: (string: string) => void
 async function getDataFromDatabase(handleData: (string: string | []) => void): Promise<void> {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
         }
         SQLite.enablePromise(true);
@@ -143,7 +143,7 @@ async function getDataByCounterName(counterName: string): Promise<TypeCounterInf
     return new Promise(async (resolve, reject) => {
         try {
             let db = dbInit;
-            if (dbInit === undefined) {
+            if (dbInit === undefined || db.transaction === undefined) {
                 db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
             }
             SQLite.enablePromise(true);
@@ -201,7 +201,8 @@ async function getDataByCounterNameAndAddressId(addressId: number | string, coun
     return new Promise(async (resolve, reject) => {
         try {
             let db = dbInit;
-            if (dbInit === undefined) {
+            console.log(db.transaction)
+            if (dbInit === undefined || db.transaction === undefined) {
                 db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
             }
             SQLite.enablePromise(true);
@@ -269,10 +270,10 @@ async function getDataByCounterNameAndAddressId(addressId: number | string, coun
  * );
  */
 async function createOrInsertData(data: TypeCounterInfo): Promise<TypeCounterInfo> {
-    // return new Promise<TypeCounterInfo>(async (resolve, reject) => {
+    
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
         }
 
@@ -319,7 +320,7 @@ async function createOrInsertData(data: TypeCounterInfo): Promise<TypeCounterInf
  */
 async function deleteDocumentById(id: number, callback: Function): Promise<void> {
     let db = dbInit;
-    if (dbInit === undefined) {
+    if (dbInit === undefined || db.transaction === undefined) {
         db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
     }
     await db.transaction(
@@ -375,7 +376,7 @@ async function deleteDocumentById(id: number, callback: Function): Promise<void>
 async function updateDocumentById(data: TypeCounterInfo, callback: Function): Promise<void> {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || !db.transaction) {
             db = await SQLite.openDatabase({ name: "counters.db", location: 'default' });
         }
         // Извлекаем новые данные из объекта newData

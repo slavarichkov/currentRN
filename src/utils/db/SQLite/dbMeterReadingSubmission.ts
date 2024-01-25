@@ -27,7 +27,7 @@ const dbInit = SQLite.openDatabase({ name: "meterReadingSubmission.db", location
 const openOrCreateDatabaseMeterCounterRecord = (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void) => {
     // Проверяем, существует ли таблица "meterReadingSubmission"
     let db = dbInit;
-    if (dbInit === undefined) {
+    if (dbInit === undefined || db.transaction === undefined) {
         db = SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
     }
     db.transaction(
@@ -82,7 +82,7 @@ const openOrCreateDatabaseMeterCounterRecord = (succeffullCallBack: (string: str
 const createMeterCounterRecord = async (data: { date: string, meterReadings: string, idAddress: string }, callback: () => void): Promise<void> => {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
         }
         SQLite.enablePromise(true);
@@ -124,7 +124,7 @@ const createMeterCounterRecord = async (data: { date: string, meterReadings: str
 async function findRecordsByIdAddress(idAddress: string): Promise<Array<TypeCounterMeters>> {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
         }
         SQLite.enablePromise(true);
@@ -179,7 +179,7 @@ async function findRecordsByIdAddress(idAddress: string): Promise<Array<TypeCoun
 const deleteMeterCounterRecordById = async (id: string, callback: () => void, errCallback:() => void, ): Promise<void> => {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
         }
         SQLite.enablePromise(true);

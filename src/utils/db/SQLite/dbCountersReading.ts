@@ -25,7 +25,7 @@ const dbInit = SQLite.openDatabase({ name: "countersReading.db", location: 'defa
  */
 const openOrCreateDatabaseMeterCounterRecord = async (succeffullCallBack: (string: string) => void, errorCallBack: (string: string) => void): Promise<void> => {
     let db = dbInit;
-    if (dbInit === undefined) {
+    if (dbInit === undefined || db.transaction === undefined) {
         db = await SQLite.openDatabase({ name: "countersReading.db", location: 'default' });
     }
     // Проверяем, существует ли таблица "countersReading"
@@ -95,7 +95,7 @@ const openOrCreateDatabaseMeterCounterRecord = async (succeffullCallBack: (strin
 const createMeterCounterRecord = async (data: { idCounter: string; data: string; date: string }, callback: () => void): Promise<void> => {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "countersReading.db", location: 'default' });
         }
         SQLite.enablePromise(true);
@@ -149,7 +149,7 @@ const createMeterCounterRecord = async (data: { idCounter: string; data: string;
 async function findRecordsByIdCounter(idCounter: string): Promise<Array<TypeCounterMeters>> {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "countersReading.db", location: 'default' });
         }
 
@@ -206,7 +206,7 @@ async function findRecordsByIdCounter(idCounter: string): Promise<Array<TypeCoun
 const deleteMeterCounterRecordById = async (id: string, callback: () => void): Promise<void> => {
     try {
         let db = dbInit;
-        if (dbInit === undefined) {
+        if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "countersReading.db", location: 'default' });
         }
         SQLite.enablePromise(true);

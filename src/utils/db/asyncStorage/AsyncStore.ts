@@ -1,5 +1,61 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+
+// Функция для сохранения Expo Push Token в AsyncStorage
+async function savePushTokenToAsyncStorage(pushToken) {
+    try {
+        await AsyncStorage.setItem('pushToken', pushToken);
+    } catch (error) {
+        console.error('Ошибка при сохранении Push Token в AsyncStorage:', error);
+    }
+}
+
+// Функция для получения Expo Push Token из AsyncStorage
+async function getPushTokenFromAsyncStorage() {
+    try {
+        const pushToken = await AsyncStorage.getItem('pushToken');
+        return pushToken;
+    } catch (error) {
+        console.error('Ошибка при получении Push Token из AsyncStorage:', error);
+        return null;
+    }
+}
+
+// Генерировать уникальный deviceId и сохранить его в asyncStorage
+const generateAndSaveDeviceId = async () => {
+    try {
+        // Попытка получения существующего deviceId из asyncStorage
+        const existingDeviceId = await AsyncStorage.getItem('deviceId');
+
+        if (existingDeviceId) {
+            // Если deviceId уже существует, вернуть его
+            return existingDeviceId;
+        } else {
+            // Если deviceId не существует, сгенерировать новый и сохранить в asyncStorage
+            const newDeviceId = uuidv4(); // Генерировать новый уникальный deviceId
+            await AsyncStorage.setItem('deviceId', newDeviceId); // Сохранить в asyncStorage
+            return newDeviceId; // Вернуть новый deviceId
+        }
+    } catch (error) {
+        // Обработка ошибки при сохранении или получении данных из asyncStorage
+        console.error('Ошибка при работе с asyncStorage:', error);
+        return null; // Вернуть null в случае ошибки
+    }
+};
+
+// Получить deviceId из asyncStorage
+const getDeviceId = async () => {
+    try {
+        const deviceId = await AsyncStorage.getItem('deviceId');
+        return deviceId;
+    } catch (error) {
+        // Обработка ошибки при получении данных из asyncStorage
+        console.error('Ошибка при получении deviceId из asyncStorage:', error);
+        return null; // Вернуть null в случае ошибки
+    }
+};
 
 /**
  * Функция для сохранения значения "locale" в Async Storage.
@@ -219,4 +275,8 @@ export {
     getSelectedThemeAsyncStore,
     addAdditionalCostOptionAsyncStore,
     getAdditionalCostOptionAsyncStore,
+    savePushTokenToAsyncStorage, // Функция для сохранения  Push Token в AsyncStorage
+    getPushTokenFromAsyncStorage, //  Функция для получения Push Token из AsyncStorage
+    generateAndSaveDeviceId, // Генерировать уникальный deviceId и сохранить его в asyncStorage
+    getDeviceId, // Получить deviceId из asyncStorage
 };
