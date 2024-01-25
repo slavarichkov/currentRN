@@ -48,6 +48,7 @@ const AddressSettingScreen = () => {
     const [isLoadingRemove, setIsLoadingRemove] = useState<boolean>(false);
     //
     const [isButtonAddressActivating, setIsButtonAddressActivating] = useState<boolean>(false);
+    const [textButtonSubmit, setTextButtonSubmit] = useState<string>(selectedTranslations.buttonAdd);
     //Адрес
     const [selectedAddress, setSelectedAddress] = useState<TypeAddressData>();
 
@@ -61,11 +62,13 @@ const AddressSettingScreen = () => {
             if (JSON.stringify(styleButton) !== JSON.stringify({ position: 'absolute', bottom: 99, width: 150, right: screenWidth / 2 - 75 })) {
                 console.log('Пользователь проскроллил на самый верх');
                 setStyleButton({ position: 'absolute', bottom: 99, width: 150, right: screenWidth / 2 - 75 });
+                setTextButtonSubmit(selectedTranslations.buttonAdd);
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }
         } else {
             if (JSON.stringify(styleButton) !== JSON.stringify({ position: 'absolute', bottom: 99, width: 50, right: 10, minWidth: 0 })) {
                 setStyleButton({ position: 'absolute', bottom: 99, width: 50, right: 10, minWidth: 0 });
+                setTextButtonSubmit('+');
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             }
 
@@ -225,7 +228,7 @@ const AddressSettingScreen = () => {
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
                 onScroll={handleScroll} // Обработчик события скроллинга
             />
-            <Button onClick={openFormAddAddress} text={'+'} style={styleButton} />
+            <Button onClick={openFormAddAddress} text={textButtonSubmit} style={styleButton} />
             <FormAddAddress
                 sumbit={addAddress}
                 isSubmitLoading={isLoadingAddAddress}

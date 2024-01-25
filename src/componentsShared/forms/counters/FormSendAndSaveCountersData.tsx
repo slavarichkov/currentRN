@@ -149,7 +149,7 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
 
     /** Преобразование массива объектов для сохранения */
     function getArrayForSaving(): { date: string, meterReadings: string, idAddress: string } {
-        const currentDate = new Date('2024-02-25').toString();
+        const currentDate = new Date().toString();
         const newArray = countersData.map(item => {
             const meterReading: any = { currentReading: item.closestReading.data };
             const closestReading = Number(item.closestReading.data);

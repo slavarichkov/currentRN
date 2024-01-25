@@ -10,7 +10,7 @@ import { openOrCreateDatabaseMeterCounterRecord } from '../../utils/db/SQLite/db
 import apiUser from '../../utils/api/apiUser';
 import { getToken, getUserId, saveUserId } from '../../utils/db/secureStore/SecureStore';
 import { generateAndSaveDeviceId, getDeviceId } from '../../utils/db/asyncStorage/AsyncStore';
-import { Platform } from 'react-native';
+import {  Platform } from 'react-native';
 
 /**
      * Контекст для работы с общей информацией: адрес.
@@ -131,6 +131,7 @@ export const GlobalContextProvider = ({ children }) => {
             setStatusAuthLoading('completed');
         }
         catch (err) {
+            setStatusAuthLoading('completed');
             console.log(err);
             setAuth(false);
         }

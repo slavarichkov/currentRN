@@ -9,7 +9,7 @@
  * @returns {React.Component} Главный компонент приложения.
  */
 
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, LayoutAnimation, StyleSheet, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -27,6 +27,7 @@ import imgChat from '../../../images/list-center-svgrepo-com.png';
 import CountersNavigator from '../CountersNavigator/CountersNavigator';
 import SettingNavigator from '../Settings/Setting';
 import LoadingScreen from '../../componentsShared/loaders/LoadingScreen';
+import { useEffect, useState } from 'react';
 
 function Main() {
 
@@ -38,12 +39,19 @@ function Main() {
     const { backgroundColor, theme } = useTheme();
     const { statusAuthLoading } = useGlobal();
 
+    const [isShow, setIsShow] = useState<boolean>(false);
+
     const activeTintColor = theme === 'light' ? '#000000' : '#ffffff';
     const tintColor = theme === 'light' ? '#000000' : 'rgba(255, 255, 255,0.5)';
 
+    useEffect(() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setIsShow(statusAuthLoading && statusAuthLoading === 'completed')
+    }, [statusAuthLoading])
+
     return (
         <View style={[styles.container, backgroundColor]}>
-            {statusAuthLoading && statusAuthLoading === 'completed' ?
+            {isShow ?
                 <Tab.Navigator
                     initialRouteName="CountersScreen" // начальный экран
                     screenOptions={{
