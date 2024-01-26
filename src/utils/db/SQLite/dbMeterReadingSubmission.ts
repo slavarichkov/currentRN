@@ -127,7 +127,7 @@ async function findRecordsByIdAddress(idAddress: string): Promise<Array<TypeCoun
         if (dbInit === undefined || db.transaction === undefined) {
             db = await SQLite.openDatabase({ name: "meterReadingSubmission.db", location: 'default' });
         }
-        SQLite.enablePromise(true);
+        //SQLite.enablePromise(true);
         return new Promise((resolve, reject) => {
             db.transaction(
                 (tx: any) => {
