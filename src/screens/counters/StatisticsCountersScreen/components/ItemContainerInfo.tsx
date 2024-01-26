@@ -32,8 +32,6 @@ const ItemContainerInfo: React.FC<ItemContainerInfoProps> = ({ dataCounter }) =>
         'Газ': '#87CEEB',
     }
 
-    console.log("dataCounter", dataCounter)
-
     function getCost() {
         const data = dataCounter.meterReading;
         const cost = data.cost.toString();

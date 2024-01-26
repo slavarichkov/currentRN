@@ -27,7 +27,7 @@ const ListInfo: React.FC<ListInfoProps> = ({ countersData }) => {
     return (
         countersData.map((counter: any) => {
             return (
-                <View key={counter.name}>
+                <View key={counter.nameCounter}>
                     <ItemContainerInfo dataCounter={counter} />
                 </View>
             )

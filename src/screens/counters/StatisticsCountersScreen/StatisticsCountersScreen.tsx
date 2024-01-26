@@ -1,18 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
+import { View, TouchableOpacity, Image, StyleSheet, FlatList } from "react-native";
 import * as Localization from 'react-native-localize';
 import { useFocusEffect } from "@react-navigation/native";
-import { View, TouchableOpacity, Image, StyleSheet, FlatList } from "react-native";
 import { useTheme } from '../../../contexts/theme/ThemeContext';
 import { useGlobal } from '../../../contexts/global/GlobalContext';
 import { useTranslate } from "../../../contexts/translate/TranslateContext";
-import imgArrow from "../../../../images/arrow-sm-left-svgrepo-com.png";
 import { deleteMeterCounterRecordById, findRecordsByIdAddress } from "../../../utils/db/SQLite/dbMeterReadingSubmission";
+import { TypeCounterMeters } from "../types/types";
+
+import imgArrow from "../../../../images/arrow-sm-left-svgrepo-com.png";
 import HeaderListReadings from "./components/HeaderListReadings";
 import FooterListReadings from "./components/FooterListReadings";
 import ItemListReadings from "./components/ItemListReadings";
 import FormTwoTextButton from "../../../componentsShared/forms/FormTwoTextButton";
 import ModalWithChildren from "../../../componentsShared/modals/ModalWithChildren";
-import { TypeCounterMeters } from "../types/types";
 
 /** Экран с отображением статистики по показаним счетчиков */
 function StatisticsCountersScreen({ navigation }) {
@@ -141,6 +142,34 @@ function StatisticsCountersScreen({ navigation }) {
         <View style={styles.separator}></View>
     );
 
+    // Компоненты FlatList
+    
+    const HeaderList = () => {
+        return (
+            <HeaderListReadings
+                dataForChart={dataForChart}
+                years={years ? years : []}
+                selectedYear={selectedYear}
+                selectYear={selectYear}
+            />
+        )
+    }
+
+    type ItemListProps = {
+        item: any;
+    };
+    const ItemList: React.FC<ItemListProps> = ({ item }) => {
+        return (
+            <ItemListReadings
+                item={item}
+                handleCkickRemove={handleCkickRemove}
+                selectedTranslations={selectedTranslations}
+                locale={locale}
+                address={address}
+                colorText={colorText}
+            />)
+    };
+
     return (
         <View style={[styles.container, backgroundColor]}>
             <TouchableOpacity style={styles.buttonBack} onPress={onBack}>
@@ -148,10 +177,10 @@ function StatisticsCountersScreen({ navigation }) {
             </TouchableOpacity>
             <FlatList
                 data={records}
-                renderItem={(item) => <ItemListReadings item={item.item} handleCkickRemove={handleCkickRemove} selectedTranslations={selectedTranslations} locale={locale} address={address} colorText={colorText} />}
+                renderItem={ItemList}
                 keyExtractor={item => item.id ? item.id : item.date}
                 style={styles.flatList} // Применение стилей к FlatList
-                ListHeaderComponent={() => <HeaderListReadings dataForChart={dataForChart} years={years} selectedYear={selectedYear} selectYear={selectYear} />} // Компонент-заголовок
+                ListHeaderComponent={HeaderList}
                 ListFooterComponent={FooterListReadings} // компонент-футер
                 ItemSeparatorComponent={ItemSeparator}
                 contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}

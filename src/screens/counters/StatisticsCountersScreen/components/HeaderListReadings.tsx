@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, TouchableOpacity, View, Text, LayoutAnimation } from "react-native"
 import ChartReadings from "./ChartReadings";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type HeaderComponent = {
     dataForChart: any;
@@ -10,7 +10,7 @@ type HeaderComponent = {
 }
 
 type RenderSwitchYear = {
-    item: any;
+    item: string;
     selectedYear: number;
     selectYear: (number: number) => void;
 }
@@ -28,33 +28,41 @@ const HeaderListReadings: React.FC<HeaderComponent> = ({ dataForChart, years, se
         )
     }
 
+    useEffect(() => {
+        setShowChart(true);
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    }, [])
+
     const ItemSeparator = () => {
         return (
             <View style={{ paddingHorizontal: 8 }}></View>
         )
     }
 
-    useEffect(() => {
-        setShowChart(true);
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    }, [])
+    const RenderSwitchYearWrapper = useCallback(({ item }) => (
+        <RenderSwitchYear
+          item={item}
+          selectedYear={selectedYear}
+          selectYear={selectYear}
+        />
+      ), [selectedYear, selectYear]);
 
     return (
         <View style={styles.container}>
             <View style={styles.flatListContainer}>
                 <FlatList
                     data={years}
-                    renderItem={({ item }) => <RenderSwitchYear item={item} selectedYear={selectedYear} selectYear={selectYear} />}
-                    keyExtractor={item => item}
+                    renderItem={RenderSwitchYearWrapper}
+                    keyExtractor={item => item.toString()}
                     style={styles.flatList} // Применение стилей к FlatList
                     ItemSeparatorComponent={ItemSeparator}
                     contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
                     horizontal={true}
                 />
             </View>
-            <View style={[styles.chart]}> 
+            <View style={[styles.chart]}>
                 <ChartReadings dataForChart={dataForChart} />
-            </View> 
+            </View>
 
         </View>
     )

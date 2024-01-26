@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, memo } from "react"
 import { LayoutAnimation, StyleSheet, Text, View } from "react-native"
 import ListInfo from "./ListInfo";
 import TextInputWithLabelInside from "../../../../componentsShared/Inputs/TextInputWithLabelInside";
@@ -59,7 +59,7 @@ interface ItemListReadingsProps {
  * @param {string} props.selectedTranslations.moreInfo - Больше информации
  * @param {object} props.address - Данные адреса (замените {...} на соответствующий тип)
  */
-const ItemListReadings: React.FC<ItemListReadingsProps> = ({ item, selectedTranslations, address, colorText, handleCkickRemove, locale }) => {
+const ItemListReadings: React.FC<ItemListReadingsProps> = memo(({ item, selectedTranslations, address, colorText, handleCkickRemove, locale }) => {
 
     const arrayCountersObj = [
         { nameCounter: 'Холодная вода', data: 'Данные счетчика', date: new Date().toString() },
@@ -130,8 +130,12 @@ const ItemListReadings: React.FC<ItemListReadingsProps> = ({ item, selectedTrans
             month: 'long',
             year: 'numeric',
         };
-    
+
         return date.toLocaleDateString(locale, options);
+    }
+
+    function clickInput(){
+
     }
 
     function onClickRemove() {
@@ -156,8 +160,8 @@ const ItemListReadings: React.FC<ItemListReadingsProps> = ({ item, selectedTrans
                             label={getCounterName(counter.nameCounter)}
                             placeholder={getCounterName(counter.nameCounter)}
                             value={counter.meterReading.currentReading}
-                            onClickInput={() => { console.log('onClickInput') }}
-                            onChangeText={() => { }}
+                            onClickInput={clickInput}
+                            onChangeText={clickInput}
                         />
                     )
                 })}
@@ -187,7 +191,7 @@ const ItemListReadings: React.FC<ItemListReadingsProps> = ({ item, selectedTrans
                 : <></>}
         </View>
     )
-}
+});
 
 const styles = StyleSheet.create({
     title: {
