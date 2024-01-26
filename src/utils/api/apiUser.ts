@@ -199,8 +199,8 @@ class ApiUser {
     }
 
     //Получить инфо о клиенте(автоматом вкладывает _id в req.user, если авторизован)
-    getSelfUser(token: string, idUser: string, idDevice: string) {
-        return fetch(`${this.host}/get-self-user/${idUser}/${idDevice}`,
+    getSelfUser(token: string, idUser: string, locale: string, platform: string, idDevice: string) {
+        return fetch(`${this.host}/get-self-user/${idUser}/${locale}/${platform}/${idDevice}`,
             {
                 method: 'GET',
                 headers: {

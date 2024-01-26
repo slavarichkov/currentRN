@@ -10,7 +10,7 @@ import { getDeviceId } from "../../../utils/db/asyncStorage/AsyncStore";
 import apiUser from "../../../utils/api/apiUser";
 
 import ButtonSetting from "./components/ButtonSetting";
-import FormSignUp from "../../../componentsShared/forms/settingAccaunt/FormSignUp/components/FormSignUp";
+import FormSignUp from "../../../componentsShared/forms/settingAccaunt/FormSignUp/FormSignUp";
 import FormSignIn from "../../../componentsShared/forms/settingAccaunt/FormSignIn";
 import FormUpdateUser from "../../../componentsShared/forms/settingAccaunt/FormUpdateUser";
 import FormRecoveryPassword from "../../../componentsShared/forms/settingAccaunt/FormRecoveryPassword/FormRecoveryPassword";

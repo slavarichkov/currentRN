@@ -1,19 +1,19 @@
 import { BlurView } from '@react-native-community/blur';
 import { useEffect, useState } from "react";
 import { Modal, View, TouchableOpacity, Image } from "react-native";
-import { useTranslate } from '../../../../../contexts/translate/TranslateContext.tsx';
-import apiUser from "../../../../../utils/api/apiUser.ts";
-import { saveToken, saveUserId } from "../../../../../utils/db/secureStore/SecureStore";
+import { useTranslate } from '../../../../contexts/translate/TranslateContext.tsx';
+import apiUser from "../../../../utils/api/apiUser.ts";
+import { saveToken, saveUserId } from "../../../../utils/db/secureStore/SecureStore.js";
 
-import EmailVerificationCode from "./EmailVerificationCode";
-import SenderVerificationCode from "./SenderVerificationCode";
-import PasswordAndSubmit from "./PasswordAndSubmit";
+import EmailVerificationCode from "./components/EmailVerificationCode.js";
+import SenderVerificationCode from "./components/SenderVerificationCode.js";
+import PasswordAndSubmit from "./components/PasswordAndSubmit.js";
 
-import styles from "./styles/styles"
-import { regexEmail, regexPassword, regexVerificationCode } from "../../../../../utils/regex";
+import styles from "./components/styles/styles.js"
+import { regexEmail, regexPassword, regexVerificationCode } from "../../../../utils/regex.ts";
 
-import imgArrow from "../../../../../../images/arrow-sm-left-svgrepo-com.png";
-import { getDeviceId } from '../../../../../utils/db/asyncStorage/AsyncStore.ts';
+import imgArrow from "../../../../../images/arrow-sm-left-svgrepo-com.png";
+import { getDeviceId } from '../../../../utils/db/asyncStorage/AsyncStore.ts';
 
 function FormSignUp({ visible, onClose, theme, handleSubmit }) {
 
@@ -70,7 +70,7 @@ function FormSignUp({ visible, onClose, theme, handleSubmit }) {
 
     }
 
-    function validationEmail(email) {
+    async function validationEmail(email) {
 
         if (email === '') {
             setValidationFormEmailVerificationCode(false);
@@ -83,8 +83,8 @@ function FormSignUp({ visible, onClose, theme, handleSubmit }) {
             } else {
 
                 setLoadingCheckVacationEmail(true);
-
-                apiUser.checkEmailVaction(email)
+                const idDevice = await getDeviceId();
+                apiUser.checkEmailVaction(email, idDevice)
                     .then((message) => {
 
                         setLoadingCheckVacationEmail(false);
@@ -163,7 +163,7 @@ function FormSignUp({ visible, onClose, theme, handleSubmit }) {
     }
 
     // Отправить проверочный код на почту пользователя
-    function sendVerificationCode() {
+    async function sendVerificationCode() {
 
         if (isValidationFormEmailVerificationCode) {
             setIsLoadingSendVerificationCode(true);
@@ -175,7 +175,8 @@ function FormSignUp({ visible, onClose, theme, handleSubmit }) {
             let timeDifferenceInSeconds = Math.floor((currentTime - timer) / 1000);
 
             if (currentTime >= timer) {
-                apiUser.sendVerificationEmail(email)
+                const idDevice = await getDeviceId();
+                apiUser.sendVerificationEmail(email, idDevice)
                     .then((message) => {
                         timer.setMinutes(timer.getMinutes() + 1); // Увеличить на 1 минуту
                         setIsInputCodeVerificationShow(false);

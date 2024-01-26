@@ -123,9 +123,9 @@ export const GlobalContextProvider = ({ children }) => {
             await generateAndSaveDeviceId();
             const deviceId = await getDeviceId();
             // Получить данные о пользователе и проверить авторизацию
-            const userData = await apiUser.getSelfUser(token, idUser, deviceId);
             const platform = Platform.OS;
-            await apiUser.getLocaleAndPlatformUserApp(token, idUser, currentLocale, platform, deviceId);
+            console.log(token, idUser, currentLocale, platform, deviceId);
+            const userData = await apiUser.getSelfUser(token, idUser, currentLocale, platform, deviceId);
             setUserData(userData.user);
             setAuth(true);
             setStatusAuthLoading('completed');
