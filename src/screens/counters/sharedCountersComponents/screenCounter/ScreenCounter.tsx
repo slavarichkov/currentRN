@@ -1,5 +1,6 @@
-import React from "react";
-import { View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, KeyboardAvoidingView, Keyboard, Platform, Dimensions, LayoutAnimation } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TypeCounterInfo, TypeCounterMeters } from "../../types/types";
 import { useTheme } from '../../../../contexts/theme/ThemeContext';
 import { useTranslate } from "../../../../contexts/translate/TranslateContext";
@@ -65,6 +66,9 @@ const ScreenCounter: React.FC<ScreenCounterPropsTypes> = ({
 
     const { backgroundColor } = useTheme();
     const { selectedTranslations } = useTranslate();
+    const insets = useSafeAreaInsets();
+
+    const [keyboardOpen, setKeyboardOpen] = useState(false);
 
     const labelFind = selectedTranslations.arrayUnitsOfMeasurement.find((item: any) => item.name === dataCounter.name);
     let label = dataCounter.name;
@@ -72,23 +76,49 @@ const ScreenCounter: React.FC<ScreenCounterPropsTypes> = ({
         label = labelFind.nameCounter;
     }
 
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                setKeyboardOpen(true);
+            }
+        );
+
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                setKeyboardOpen(false);
+            }
+        );
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1, }}>
             <View style={[styles.container, backgroundColor]}>
-                <View style={styles.containerInfoCounter}>
-                    <TextCountersInfo
-                        dataCounter={dataCounter}
-                        onClickCounter={onClickCounter}
-                    />
-                    <View style={styles.buttonInfoCounter}>
-                        <ButtonClickCounter
-                            text={selectedTranslations.update}
-                            onClick={onClickCounter}
+                {!keyboardOpen?
+                    <View style={[styles.containerInfoCounter]}>
+                        <TextCountersInfo
+                            dataCounter={dataCounter}
+                            onClickCounter={onClickCounter}
                         />
+                        <View style={styles.buttonInfoCounter}>
+                            <ButtonClickCounter
+                                text={selectedTranslations.update}
+                                onClick={onClickCounter}
+                            />
+                        </View>
                     </View>
-                </View>
+                    : <></>
+                }
                 <FormAddCountersData
                     onSubmitForm={saveData}
                     inputOneLabel={label}
@@ -98,30 +128,30 @@ const ScreenCounter: React.FC<ScreenCounterPropsTypes> = ({
                     isLoadingSubmit={isLoaderSaveData}
                     dateReading={currentReading ? currentReading.date : ''}
                 />
-                {/* <ModalWithChildren
-                isVisible={isOpenedFormUpdateAndInfo}
-                onClose={closeFormUpdateAndInfo}
-                theme={theme}
-            /> */}
-                <FormUpdateCounter
-                    isOpen={isOpenedFormUpdateAndInfo}
-                    onClose={closeFormUpdateAndInfo}
-                    dataCounter={dataCounter}
-                    sumbitUpdateCounter={sumbitUpdateCounter}
-                    isLoadingUpdateCounter={isLoadingUpdateCounter}
-                />
+                {isOpenedFormUpdateAndInfo ?
+                    <FormUpdateCounter
+                        isOpen={isOpenedFormUpdateAndInfo}
+                        onClose={() => setTimeout(closeFormUpdateAndInfo, Platform.OS === 'ios' ? 270 : 0)}
+                        dataCounter={dataCounter}
+                        sumbitUpdateCounter={sumbitUpdateCounter}
+                        isLoadingUpdateCounter={isLoadingUpdateCounter}
+                    />
+                    : <></>}
             </View>
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingView >
     )
 }
 
+const ScreenHeight = Dimensions.get("window").height;
+const padding = ScreenHeight > 770 ? 170 : 70
+console.log(ScreenHeight)
 const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingBottom: 170,
+        paddingBottom: padding,
     },
     containerInfoCounter: {
         flex: 1,

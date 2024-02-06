@@ -45,6 +45,7 @@ yarn-error.log*
 **/android/local.properties
 **/android/.gradle
 **/android/.idea
+.jks
 
 # Игнорировать файлы Xcode
 **/ios/*.pbxuser

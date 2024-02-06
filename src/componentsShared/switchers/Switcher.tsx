@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Switch, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
 
 interface SwitcherProps {
@@ -39,7 +39,6 @@ interface SwitcherProps {
  * @returns {React.JSX.Element} - JSX-элемент компонента Switcher.
  */
 const Switcher: React.FC<SwitcherProps> = ({ textOn, textOff, on, off, isEnabled, setIsEnabled, styleText }) => {
-
     const toggleSwitch = () => {
         setIsEnabled((previousState) => !previousState);
         if (!isEnabled) {
@@ -64,6 +63,7 @@ const Switcher: React.FC<SwitcherProps> = ({ textOn, textOff, on, off, isEnabled
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

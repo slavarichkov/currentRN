@@ -1,15 +1,4 @@
-/**
- * Главный компонент - точка входа приложения, управляющий навигацией и скринами.
- *
- * @component
- * @example
- * import MainApp from './MainApp';
- * <MainApp />
- *
- * @returns {React.Component} Главный компонент приложения.
- */
-
-import { Dimensions, Image, LayoutAnimation, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, LayoutAnimation, Keyboard, StyleSheet, View, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,6 +18,16 @@ import SettingNavigator from '../Settings/Setting';
 import LoadingScreen from '../../componentsShared/loaders/LoadingScreen';
 import { useEffect, useState } from 'react';
 
+/**
+ * Главный компонент - точка входа приложения, управляющий навигацией и скринами.
+ *
+ * @component
+ * @example
+ * import MainApp from './MainApp';
+ * <MainApp />
+ *
+ * @returns {React.Component} Главный компонент приложения.
+ */
 function Main() {
 
     const Tab = createBottomTabNavigator();
@@ -40,9 +39,33 @@ function Main() {
     const { statusAuthLoading } = useGlobal();
 
     const [isShow, setIsShow] = useState<boolean>(false);
+    const [keyboardOpen, setKeyboardOpen] = useState(false);
 
     const activeTintColor = theme === 'light' ? '#000000' : '#ffffff';
     const tintColor = theme === 'light' ? '#000000' : 'rgba(255, 255, 255,0.5)';
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardOpen(true);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            }
+        );
+
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardOpen(false);
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            }
+        );
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
 
     useEffect(() => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -51,12 +74,13 @@ function Main() {
 
     return (
         <View style={[styles.container, backgroundColor]}>
-            {isShow ?
+            {!isShow ?
                 <Tab.Navigator
                     initialRouteName="CountersScreen" // начальный экран
                     screenOptions={{
                         tabBarLabel: () => null, // Скрыть название вкладки
                         tabBarStyle: {
+                            opacity: keyboardOpen && Platform.OS === 'android' ? 0 : 1, //
                             width: screenWidth, // Ширина на весь экран
                             position: 'absolute',
                             borderTopLeftRadius: 30,

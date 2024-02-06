@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BlurView } from '@react-native-community/blur';
-import { View, TouchableOpacity, StyleSheet, Image, Modal, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, Modal, Dimensions, KeyboardAvoidingView, Platform, LayoutAnimation, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/theme/ThemeContext';
 
@@ -25,8 +25,44 @@ const ModalWithChildren: React.FC<ModalWithChildren> = ({
     const insets = useSafeAreaInsets();
     const { theme } = useTheme();
 
+    const [isVisibleModal, setIsVisibleModal] = useState(false);
+
+    useEffect(() => {
+        const configureKeyboardLayoutAnimation = () => {
+            LayoutAnimation.configureNext(LayoutAnimation.create(
+                250, // длительность анимации в миллисекундах
+                LayoutAnimation.Types.easeInEaseOut, // тип анимации
+                LayoutAnimation.Properties.opacity, // свойство, по которому происходит анимация
+            ));
+        };
+
+        const keyboardDidShowListener = Keyboard.addListener(
+            Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
+            configureKeyboardLayoutAnimation
+        );
+
+        const keyboardDidHideListener = Keyboard.addListener(
+            Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
+            configureKeyboardLayoutAnimation
+        );
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isVisible) {
+            setIsVisibleModal(true);
+        } else {
+            setIsVisibleModal(false);
+        }
+
+    }, [isVisible])
+
     return (
-        <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
+        <Modal animationType="slide" transparent={true} visible={isVisibleModal} onRequestClose={onClose}>
             <TouchableOpacity style={styles.overlay} onPress={onClose}>
                 {/* Прозрачный фон */}
             </TouchableOpacity>
@@ -35,7 +71,7 @@ const ModalWithChildren: React.FC<ModalWithChildren> = ({
                 style={styles.container}>
                 <BlurView
                     style={styles.blur}
-                    blurType={theme ? theme : 'light'}
+                    blurType={'light'}
                     blurAmount={theme === "light" ? 9 : 10}
                     overlayColor="rgba(255,255,255,0.3)"
                 />

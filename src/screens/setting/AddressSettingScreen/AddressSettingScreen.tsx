@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FlatList, View, StyleSheet, Dimensions, LayoutAnimation, Text } from "react-native";
 import { useGlobal } from '../../../contexts/global/GlobalContext';
 import { useTheme } from '../../../contexts/theme/ThemeContext';
@@ -60,16 +60,16 @@ const AddressSettingScreen = () => {
         // Проверка, что пользователь проскроллил на самый верх
         if (offsetY <= 10) {
             if (JSON.stringify(styleButton) !== JSON.stringify({ position: 'absolute', bottom: 99, width: 150, right: screenWidth / 2 - 75 })) {
-                console.log('Пользователь проскроллил на самый верх');
-                setStyleButton({ position: 'absolute', bottom: 99, width: 150, right: screenWidth / 2 - 75 });
-                setTextButtonSubmit(selectedTranslations.buttonAdd);
+                //console.log('Пользователь проскроллил на самый верх');
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                setTextButtonSubmit(selectedTranslations.buttonAdd);
+                setStyleButton({ position: 'absolute', bottom: 99, right: screenWidth / 2 - 75 });
             }
         } else {
-            if (JSON.stringify(styleButton) !== JSON.stringify({ position: 'absolute', bottom: 99, width: 50, right: 10, minWidth: 0 })) {
-                setStyleButton({ position: 'absolute', bottom: 99, width: 50, right: 10, minWidth: 0 });
-                setTextButtonSubmit('+');
+            if (JSON.stringify(styleButton) !== JSON.stringify({ position: 'absolute', bottom: 99, width: 50, right: 10, minWidth: 150 })) {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                setTextButtonSubmit('+');
+                setStyleButton({ position: 'absolute', bottom: 99, width: 50, right: 10, minWidth: 50 });
             }
 
         }
@@ -126,9 +126,9 @@ const AddressSettingScreen = () => {
 
     /** Открыть форму удаления*/
     function openFormRemoveAddress() {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setIsOpeningFormControlAddress(false);
         setIsOpeningFormRemoveAddress(true);
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }
 
     /** Свернуть форму удаления*/
@@ -152,9 +152,9 @@ const AddressSettingScreen = () => {
     }
 
     function openFormUpdateAddress() {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setIsOpeningFormControlAddress(false);
         setIsOpeningFormUpdateAddress(true);
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }
 
     /** Удалить*/
@@ -171,16 +171,16 @@ const AddressSettingScreen = () => {
                         setIsLoadingRemove(false);
                         setIsOpeningFormRemoveAddress(false);
                         setInfoMessage(selectedTranslations.errorMessage);
-                        setisOpenInfoMessage(true);
                         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                        setisOpenInfoMessage(true);
                     })
             }
         } else {
             setIsLoadingRemove(false);
             setIsOpeningFormRemoveAddress(false);
             setInfoMessage(selectedTranslations.choiseAddress);
-            setisOpenInfoMessage(true);
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            setisOpenInfoMessage(true);
         }
     }
 
@@ -215,65 +215,93 @@ const AddressSettingScreen = () => {
         }
     }
 
+    // Элемент списка адресов
+    const ItemFlatList = ({ item }) => {
+
+        function onClick() {
+            onClickItem(item)
+        }
+        return (
+            <AddressItem addressData={item} onClick={onClick} />
+        )
+
+    }
+
+    const footerFlatList = () => {
+        return (<View style={styles.flatListFooter}>
+        </View>)
+    }
+
+    // Мемоизированная версия FlatList
+    const MemoizedFlatList = useMemo(() => (
+        <FlatList
+            data={addressesArray}
+            extraData={addressesArray} // Указываем зависимость от массива адресов
+            renderItem={ItemFlatList}
+            keyExtractor={item => item.id}
+            style={styles.flatList}
+            ListHeaderComponent={HeaderAddressSetting}
+            ListFooterComponent={footerFlatList}
+            ItemSeparatorComponent={Separator}
+            contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+            onScroll={handleScroll}
+            initialNumToRender={10} // Указываем максимальное количество элементов для первоначального рендера
+        />
+    ), [addressesArray, styleButton]); // Указываем зависимость от массива адресов
+
     return (
         <View style={[styles.container, backgroundColor]}>
-            <FlatList
-                data={addressesArray}
-                renderItem={({ item }) => <AddressItem addressData={item} onClick={(item: TypeAddressData) => onClickItem(item)} />}
-                keyExtractor={item => item.id}
-                style={styles.flatList} // Применение стилей к FlatList
-                ListHeaderComponent={() => <HeaderAddressSetting />} // Компонент-заголовок
-                ListFooterComponent={<></>} // компонент-футер
-                ItemSeparatorComponent={Separator} // Добавляем разделитель
-                contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
-                onScroll={handleScroll} // Обработчик события скроллинга
-            />
+            {MemoizedFlatList}
             <Button onClick={openFormAddAddress} text={textButtonSubmit} style={styleButton} />
-            <FormAddAddress
-                sumbit={addAddress}
-                isSubmitLoading={isLoadingAddAddress}
-                onCloseForm={closeFormAddAddress}
-                visible={isOpeningFormAddAddress}
-            />
-            <ModalWithChildren
-                isVisible={isOpenedModalForms}
-                onClose={closeModalForms}
-                theme={theme}
-                childComponent={
-                    <>
-                        {isOpeningFormControlAddress ?
-                            <FormControlAddress
-                                isButtonAddressActivating={isButtonAddressActivating}
-                                onEdit={openFormUpdateAddress}
-                                onRemove={openFormRemoveAddress}
-                                isSubmitLoading={isLoadingUpdateAddress}
-                                activateAddress={onActivateAddress}
-                            />
-                            : <></>}
-                        {isOpeningFormUpdateAddress && selectedAddress ?
-                            <FormUpdateAddress
-                                address={selectedAddress}
-                                sumbit={updateAddress}
-                                isSubmitLoading={isLoadingUpdateAddress}
-                            />
-                            : <></>}
-                        {isOpeningFormRemoveAddress ?
-                            // Форма удаления
-                            <FormTwoTextButton
-                                text={selectedTranslations.remove}
-                                onClickOne={remove}
-                                onClickTwo={closeModalForms}
-                                textButtonOne={selectedTranslations.yes}
-                                textButtonTwo={selectedTranslations.no}
-                                isSubmitLoading={isLoadingRemove}
-                            />
-                            : <></>}
-                        {isOpenInfoMessage ?
-                            <Text style={[styles.infoText, colorTextModal]}>{infoMessage}</Text>
-                            : <></>}
-                    </>
-                }
-            />
+            {isOpeningFormAddAddress ?
+                <FormAddAddress
+                    sumbit={addAddress}
+                    isSubmitLoading={isLoadingAddAddress}
+                    onCloseForm={closeFormAddAddress}
+                    visible={isOpeningFormAddAddress}
+                />
+                : <></>}
+            {isOpenedModalForms ?
+                <ModalWithChildren
+                    isVisible={isOpenedModalForms}
+                    onClose={closeModalForms}
+                    childComponent={
+                        <>
+                            {isOpeningFormControlAddress ?
+                                <FormControlAddress
+                                    isButtonAddressActivating={isButtonAddressActivating}
+                                    onEdit={openFormUpdateAddress}
+                                    onRemove={openFormRemoveAddress}
+                                    isSubmitLoading={isLoadingUpdateAddress}
+                                    activateAddress={onActivateAddress}
+                                />
+                                : <></>}
+                            {isOpeningFormUpdateAddress && selectedAddress ?
+                                <FormUpdateAddress
+                                    address={selectedAddress}
+                                    sumbit={updateAddress}
+                                    isSubmitLoading={isLoadingUpdateAddress}
+                                />
+                                : <></>}
+                            {isOpeningFormRemoveAddress ?
+                                // Форма удаления
+                                <FormTwoTextButton
+                                    text={selectedTranslations.remove}
+                                    onClickOne={remove}
+                                    onClickTwo={closeModalForms}
+                                    textButtonOne={selectedTranslations.yes}
+                                    textButtonTwo={selectedTranslations.no}
+                                    isSubmitLoading={isLoadingRemove}
+                                />
+                                : <></>}
+                            {isOpenInfoMessage ?
+                                <Text style={[styles.infoText, colorTextModal]}>{infoMessage}</Text>
+                                : <></>}
+                        </>
+                    }
+                />
+                : <></>
+            }
         </View>
     )
 }
@@ -305,6 +333,9 @@ const styles = StyleSheet.create({
         height: 8,
         backgroundColor: 'transpsrent',
     },
+    flatListFooter: {
+        paddingBottom: 170,
+    }
 })
 
 export default AddressSettingScreen;

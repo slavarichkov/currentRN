@@ -4,7 +4,7 @@ import { useTranslate } from '../../../../contexts/translate/TranslateContext';
 import { useGlobal } from '../../../../contexts/global/GlobalContext';
 import { TypeCounterInfo } from "../../types/types";
 import { createMeterCounterRecord } from "../../../../utils/db/SQLite/dbMeterReadingSubmission";
-import ListInfo from "../../CountersInfoScreen/components/ListInfo";
+import ListInfo from "../../CountersInfoAndSendDataScreen/components/ListInfo";
 import TextInputWithLabelInside from "../../../Inputs/TextInputWithLabelInside"
 import ButtonSetting from "../../../setting/GlobalSettingScreen/components/ButtonSetting";
 import ButtonMoreInfo from "../../../buttons/ButtonMoreInfo";

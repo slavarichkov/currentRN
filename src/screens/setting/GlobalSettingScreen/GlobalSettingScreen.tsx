@@ -180,45 +180,56 @@ function GlobalSettingScreen() {
                 <Text style={[styles.textNameButtonContainer, colorText]}>{selectedTranslations.buttonNameLanguage}</Text>
                 <ButtonSetting text={selectedTranslations.ru} onClick={() => changeLocaleUser('ru')} />
             </View>
-
-            <FormSignUp
-                handleSubmit={handleSuccessfulRegistration}
-                visible={isOpenFormSignUp}
-                theme={theme}
-                onClose={closeFormSignUp}
-            />
-            <FormSignIn
-                visible={isOpenFormSignIn}
-                handleSubmit={handleSuccessfulSignIn}
-                onClose={closeFormSignIn}
-                openRecoveryPassword={openFormRecoveryPassword}
-            />
-            <FormUpdateUser
-                visible={isOpenFormUpdateUser}
-                closeForm={closeFormUpdateUser}
-                theme={theme}
-                userAppLogin={login}
-            />
-            <FormRecoveryPassword
-                visible={isOpenFormRecoveryPassword}
-                onClose={closeFormRecoveryPassword}
-                theme={theme}
-                handleSubmit={handleAccessRecoveryPassword}
-            />
-            <FormLogOut
-                isOpenFormSignOut={isOpenFormSignOut}
-                closeFormSignOut={closeFormSignOut}
-                logOut={logOut}
-                theme={theme}
-                localeUser={locale} />
-            <FormRemoveProfile
-                loading={false}
-                isOpenFormDeleteProfile={isOpenFormDeleteProfile}
-                closeFormDeleteProfile={closeFormDeleteProfile}
-                theme={theme}
-                deleteProfile={removeProfile}
-                localeUser={locale}
-            />
+            {isOpenFormSignUp ?
+                <FormSignUp
+                    handleSubmit={handleSuccessfulRegistration}
+                    visible={isOpenFormSignUp}
+                    theme={theme}
+                    onClose={closeFormSignUp}
+                />
+                : <></>}
+            {isOpenFormSignIn ?
+                <FormSignIn
+                    visible={isOpenFormSignIn}
+                    handleSubmit={handleSuccessfulSignIn}
+                    onClose={closeFormSignIn}
+                    openRecoveryPassword={openFormRecoveryPassword}
+                />
+                : <></>}
+            {isOpenFormUpdateUser ?
+                <FormUpdateUser
+                    visible={isOpenFormUpdateUser}
+                    closeForm={closeFormUpdateUser}
+                    theme={theme}
+                    userAppLogin={login}
+                />
+                : <></>}
+            {isOpenFormRecoveryPassword ?
+                <FormRecoveryPassword
+                    visible={isOpenFormRecoveryPassword}
+                    onClose={closeFormRecoveryPassword}
+                    theme={theme}
+                    handleSubmit={handleAccessRecoveryPassword}
+                />
+                : <></>}
+            {isOpenFormSignOut ?
+                <FormLogOut
+                    isOpenFormSignOut={isOpenFormSignOut}
+                    closeFormSignOut={closeFormSignOut}
+                    logOut={logOut}
+                    theme={theme}
+                    localeUser={locale} />
+                : <></>}
+            {isOpenFormDeleteProfile ?
+                <FormRemoveProfile
+                    loading={false}
+                    isOpenFormDeleteProfile={isOpenFormDeleteProfile}
+                    closeFormDeleteProfile={closeFormDeleteProfile}
+                    theme={theme}
+                    deleteProfile={removeProfile}
+                    localeUser={locale}
+                />
+                : <></>}
         </View>
     )
 }
@@ -227,7 +238,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        paddingStart: 25,
         //justifyContent: 'center',
         alignItems: 'center',
     },

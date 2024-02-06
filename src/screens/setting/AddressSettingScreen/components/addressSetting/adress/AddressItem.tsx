@@ -20,7 +20,7 @@ const AddressItem: React.FC<TypeAddressData> = ({ addressData, onClick }) => {
 
     const { colorText } = useTheme();
     const { selectedTranslations } = useTranslate();
-
+    
     return (
         addressData ?
             <TouchableOpacity style={styles.container} onPress={onClick ? () => onClick(addressData) : () => { }}>

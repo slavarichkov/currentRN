@@ -1,4 +1,6 @@
 import { Linking } from "react-native";
+import { useTranslate } from "../contexts/translate/TranslateContext";
+const { locale } = useTranslate();
 
 /**
  * Форматирует дату в строке в локализованный русский формат.
@@ -40,7 +42,12 @@ const sendEmail = async (
     body: string,
     errCallback: () => void) => {
 
-    let mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+    const signature = locale === 'ru' ? 'Данные отправлены из приложения Передача счетчиков' : 'The data was sent from the application Meter Readings';
+
+    // Добавляем подпись к телу письма
+    const bodyWithSignature = `${body}\n\n${signature}`;
+
+    let mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${bodyWithSignature}`;
 
     try {
         await Linking.openURL(mailtoUrl);

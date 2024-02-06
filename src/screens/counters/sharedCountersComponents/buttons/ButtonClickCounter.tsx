@@ -11,6 +11,7 @@ interface ButtonClickCounterProps {
   style?: any;
 }
 
+/** Кнопка редактирования счетчика */
 const ButtonClickCounter: React.FC<ButtonClickCounterProps> = ({ onClick, text, style, theme, isLoading, disabled }) => {
   
   const onPress = () => {

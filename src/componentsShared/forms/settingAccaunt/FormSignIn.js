@@ -1,6 +1,6 @@
 import { BlurView } from '@react-native-community/blur';
 import { useEffect, useState, useRef } from "react";
-import { Modal, StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Keyboard, KeyboardAvoidingView } from "react-native";
+import { Modal, StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Keyboard, KeyboardAvoidingView, LayoutAnimation } from "react-native";
 import { useTranslate } from '../../../contexts/translate/TranslateContext';
 import { useTheme } from '../../../contexts/theme/ThemeContext';
 import Checkbox from '../../checkboxs/Checkbox';
@@ -179,69 +179,69 @@ function FormSignIn({ visible, onClose, handleSubmit, openRecoveryPassword }) {
     };
 
     return (
-        <Modal visible={visible} animationType={'slide'} transparent={true} onRequestClose={close}>
-            <BlurView
-                style={styles.blur}
-                intensity={70}
-                blurType={'light'}
-                overlayColor="rgba(255,255,255,0.3)"
-            />
-            {isSignIn ?
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    style={styles.container}>
-                    <TouchableOpacity style={styles.buttonClose} onPress={onClose}>
-                        <Image source={imgArrow} style={styles.imgButtonClose} />
-                    </TouchableOpacity>
-                    <>
-                        <TextInput
-                            style={[styles.input]}
-                            placeholder={selectedTranslations.placeHolderEmail}
-                            value={email}
-                            onChangeText={setEmail}
-                            placeholderTextColor={'rgba(0,0,0,0.5)'}
-                            maxLength={150}
-                            onSubmitEditing={handleInputEmailSubmit}
-                            returnKeyType={'next'}
-                        />
-                        <TextInput
-                            style={[styles.input]}
-                            placeholder={selectedTranslations.placeHolderPassword}
-                            value={password}
-                            onChangeText={setPassword}
-                            placeholderTextColor={'rgba(0,0,0,0.5)'}
-                            maxLength={50}
-                            ref={inputPasswordRef}
-                            onSubmitEditing={handleInputPasswordSubmit}
-                            returnKeyType={'done'}
-                        />
-                        {isShowCheckBox ?
-                            <Checkbox
-                                isChecked={isCheckedPrivacyPolicy}
-                                setChecked={setCheckedPrivacyPolicy}
-                                linkText={selectedTranslations.privacyPolicy}
-                                linkName={selectedTranslations.privacyPolicyButtonName}
-                                link={selectedTranslations.privacyPolicyLink}
+        <View>
+            <Modal visible={visible} animationType={'slide'} transparent={true} onRequestClose={close}>
+                <BlurView
+                    style={styles.blur}
+                    intensity={70}
+                    blurType={'light'}
+                    overlayColor="rgba(255,255,255,0.3)"
+                />
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        style={styles.container}>
+                        <TouchableOpacity style={styles.buttonClose} onPress={onClose}>
+                            <Image source={imgArrow} style={styles.imgButtonClose} />
+                        </TouchableOpacity>
+                        <>
+                            <TextInput
+                                style={[styles.input]}
+                                placeholder={selectedTranslations.placeHolderEmail}
+                                value={email}
+                                onChangeText={setEmail}
+                                placeholderTextColor={'rgba(0,0,0,0.5)'}
+                                maxLength={150}
+                                onSubmitEditing={handleInputEmailSubmit}
+                                returnKeyType={'next'}
                             />
-                            : <></>}
-                        <View style={styles.containerSubmitButton}>
-                            <Button text={selectedTranslations.buttonSignIn} onClick={onSubmit} disabled={!isValidationForm} isLoading={isLoading} />
-                        </View>
-                    </>
-                    <>
-                        {validationEmailText !== '' ?
-                            <Text style={styles.validationText}>{validationEmailText}</Text>
-                            : <></>}
-                        {validationPasswordText !== '' ?
-                            < Text style={styles.validationText}>{validationPasswordText}</Text>
-                            : <></>}
-                    </>
-                    <TouchableOpacity style={styles.buttonRecoveryPassword} onPress={openRecoveryPassword}>
-                        <Text style={styles.textButtonRecoveryPassword}>{selectedTranslations.recoverPasswordButtonName}</Text>
-                    </TouchableOpacity>
-                </KeyboardAvoidingView>
-                : <></>}
-        </Modal >
+                            <TextInput
+                                style={[styles.input]}
+                                placeholder={selectedTranslations.placeHolderPassword}
+                                value={password}
+                                onChangeText={setPassword}
+                                placeholderTextColor={'rgba(0,0,0,0.5)'}
+                                maxLength={50}
+                                ref={inputPasswordRef}
+                                onSubmitEditing={handleInputPasswordSubmit}
+                                returnKeyType={'done'}
+                            />
+                            {isShowCheckBox ?
+                                <Checkbox
+                                    isChecked={isCheckedPrivacyPolicy}
+                                    setChecked={setCheckedPrivacyPolicy}
+                                    linkText={selectedTranslations.privacyPolicy}
+                                    linkName={selectedTranslations.privacyPolicyButtonName}
+                                    link={selectedTranslations.privacyPolicyLink}
+                                />
+                                : <></>}
+                            <View style={styles.containerSubmitButton}>
+                                <Button text={selectedTranslations.buttonSignIn} onClick={onSubmit} disabled={!isValidationForm} isLoading={isLoading} />
+                            </View>
+                        </>
+                        <>
+                            {validationEmailText !== '' ?
+                                <Text style={styles.validationText}>{validationEmailText}</Text>
+                                : <></>}
+                            {validationPasswordText !== '' ?
+                                < Text style={styles.validationText}>{validationPasswordText}</Text>
+                                : <></>}
+                        </>
+                        <TouchableOpacity style={styles.buttonRecoveryPassword} onPress={openRecoveryPassword}>
+                            <Text style={styles.textButtonRecoveryPassword}>{selectedTranslations.recoverPasswordButtonName}</Text>
+                        </TouchableOpacity>
+                    </KeyboardAvoidingView>
+            </Modal >
+        </View>
     )
 
 }

@@ -126,7 +126,7 @@ const FormAddCountersData: React.FC<FormAddCountersDataProps> = ({
                 placeholderTextColor={'rgba(0,0,0,0.5)'}
                 forwardedRef={inputOneRef}
                 handleInputSubmit={handleInputOneSubmit}
-                returnKeyType={'next'}
+                returnKeyType={'done'}
                 onClickInfo={onClickInfoOneCounter}
                 dateReading={dateReading}
             />

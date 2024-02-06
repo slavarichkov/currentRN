@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { StatusBar, StyleSheet } from 'react-native';
+import { Platform, StatusBar, StyleSheet, UIManager } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import messaging from '@react-native-firebase/messaging';
@@ -17,6 +17,14 @@ import SplashScreen from 'react-native-splash-screen';
 
 import Main from './src/navigators/Main/Main';
 import { getSelectedThemeAsyncStore } from './src/utils/db/asyncStorage/AsyncStore';
+
+// Включение поддержки анимации макета на Android, которая позволяет использовать LayoutAnimation для создания анимаций  компонентов при изменении их размеров и расположения. Однако по умолчанию эта функция отключена.
+// if (
+//   Platform.OS === 'android' &&
+//   UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 
 function App(): React.JSX.Element {
 

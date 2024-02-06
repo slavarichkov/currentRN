@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { TextInput, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TextInput, StyleSheet, Text, View, Platform } from "react-native";
 import ButtonImage from '../buttons/ButtonImage';
 import Button from '../buttons/Button';
 import imgInfo from '../../../images/info-svgrepo-com.png';
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         paddingHorizontal: 5,
-        paddingVertical: 15,
+        paddingVertical: Platform.OS === 'ios' ? 15 : 11,
         margin: 0,
         width: 290,
         color: 'rgba(0,0,0,1)',

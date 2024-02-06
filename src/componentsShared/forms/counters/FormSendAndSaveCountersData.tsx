@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { LayoutAnimation, StyleSheet, Text, View } from "react-native"
+import { LayoutAnimation, StyleSheet, Text, View, Platform, UIManager } from "react-native"
 import { useTranslate } from '../../../contexts/translate/TranslateContext';
 import { useGlobal } from '../../../contexts/global/GlobalContext';
 import { useTheme } from '../../../contexts/theme/ThemeContext';
 import { TypeCounterInfo } from "../../../screens/counters/types/types";
 import { createMeterCounterRecord } from "../../../utils/db/SQLite/dbMeterReadingSubmission";
 import { sendEmail } from "../../../utils/funtions";
-import ListInfo from "../../../screens/counters/CountersInfoScreen/components/ListInfo";
+import ListInfo from "../../../screens/counters/CountersInfoAndSendDataScreen/components/ListInfo";
 import TextInputWithLabelInside from "../../Inputs/TextInputWithLabelInside"
 import ButtonSetting from "../../../screens/setting/GlobalSettingScreen/components/ButtonSetting";
 import ButtonMoreInfo from "../../buttons/ButtonMoreInfo";
@@ -202,13 +202,14 @@ const FormSendAndSaveCountersData: React.FC<FormSendAndSaveCountersDataProps> = 
                 if (correspondingItem) {
                     return {
                         nameCounter: correspondingItem.nameCounter,
+                        numberCounter: item1.counterNumber,
                         data: item1.closestReading.data,
                     };
                 }
                 return null; // или верните объект по умолчанию, если не найдено соответствие
             }).filter(Boolean);
             const body = newArray.reduce((acc: any, item) => {
-                const dataCounter = `${item?.nameCounter}: ${item?.data}, `
+                const dataCounter = `${item?.nameCounter}(№${item?.numberCounter}): ${item?.data}, `
                 return acc + dataCounter;
             }, '');
             //await onSave();

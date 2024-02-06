@@ -15,6 +15,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const screenWidth = Dimensions.get('window').width * 1;
 
+/** Компонент навигатор настроек */
 function SettingNavigator() {
 
     const { backgroundColor, colorText } = useTheme();
@@ -48,7 +49,7 @@ function SettingNavigator() {
                     name={"AddressSetting"}
                     component={AddressSettingScreen}
                     options={{
-                        tabBarIndicatorStyle: { backgroundColor: 'yellow', opacity: 0.5 }, // Стиль индикатора
+                        tabBarIndicatorStyle: { backgroundColor: 'rgba(39, 186, 227, 1.00)', opacity: 0.5 }, // Стиль индикатора
                         tabBarLabel: ({ color, focused }) => (
                             <Text style={{ color: colorText.color, opacity: focused ? 1 : 0.5, fontSize: 17, fontWeight: 600, }}>
                                 {selectedTranslations.addressSetting}
@@ -60,7 +61,7 @@ function SettingNavigator() {
                     name={"GlobalSetting"}
                     component={GlobalSettingScreen}
                     options={{
-                        tabBarIndicatorStyle: { backgroundColor: 'yellow', opacity: 0.5 }, // Стиль индикатора
+                        tabBarIndicatorStyle: { backgroundColor: 'rgba(39, 186, 227, 1.00)', opacity: 0.5 }, // Стиль индикатора
                         tabBarLabel: ({ color, focused }) => (
                             <Text style={{ color: colorText.color, opacity: focused ? 1 : 0.5, fontSize: 17, fontWeight: 600, }}>
                                 {selectedTranslations.globalSetting}

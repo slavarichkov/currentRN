@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import CountersInfoScreen from '../../screens/counters/CountersInfoScreen/CountersInfoScreen';
+import CountersInfoScreen from '../../screens/counters/CountersInfoAndSendDataScreen/CountersInfoScreen';
 import StatisticsCountersScreen from '../../screens/counters/StatisticsCountersScreen/StatisticsCountersScreen';
 
 function CountersReadingNavigator() {

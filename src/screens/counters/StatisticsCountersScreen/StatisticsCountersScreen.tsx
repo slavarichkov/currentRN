@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { View, TouchableOpacity, Image, StyleSheet, FlatList } from "react-native";
 import * as Localization from 'react-native-localize';
 import { useFocusEffect } from "@react-navigation/native";
@@ -143,7 +143,7 @@ function StatisticsCountersScreen({ navigation }) {
     );
 
     // Компоненты FlatList
-    
+
     const HeaderList = () => {
         return (
             <HeaderListReadings
@@ -170,21 +170,26 @@ function StatisticsCountersScreen({ navigation }) {
             />)
     };
 
+    // Мемоизированная версия FlatList
+    const MemoizedFlatList = useMemo(() => (
+        <FlatList
+            data={records}
+            renderItem={ItemList}
+            keyExtractor={item => item.id ? item.id : item.date}
+            style={styles.flatList} // Применение стилей к FlatList
+            ListHeaderComponent={HeaderList}
+            ListFooterComponent={FooterListReadings} // компонент-футер
+            ItemSeparatorComponent={ItemSeparator}
+            contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+        />
+    ), [records])
+
     return (
         <View style={[styles.container, backgroundColor]}>
             <TouchableOpacity style={styles.buttonBack} onPress={onBack}>
                 <Image source={imgArrow} style={styles.imgButtonClose} />
             </TouchableOpacity>
-            <FlatList
-                data={records}
-                renderItem={ItemList}
-                keyExtractor={item => item.id ? item.id : item.date}
-                style={styles.flatList} // Применение стилей к FlatList
-                ListHeaderComponent={HeaderList}
-                ListFooterComponent={FooterListReadings} // компонент-футер
-                ItemSeparatorComponent={ItemSeparator}
-                contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
-            />
+            {MemoizedFlatList}
             <ModalWithChildren
                 isVisible={isOpenFormRemoveReadings}
                 onClose={() => setIsOpenFormRemoveReadings(false)}
@@ -205,6 +210,7 @@ function StatisticsCountersScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        zIndex: 999,
     },
     flatList: {
         width: '100%',

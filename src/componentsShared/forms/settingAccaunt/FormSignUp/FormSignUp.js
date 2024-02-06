@@ -1,6 +1,6 @@
 import { BlurView } from '@react-native-community/blur';
 import { useEffect, useState } from "react";
-import { Modal, View, TouchableOpacity, Image } from "react-native";
+import { Modal, View, TouchableOpacity, Image, LayoutAnimation, Keyboard } from "react-native";
 import { useTranslate } from '../../../../contexts/translate/TranslateContext.tsx';
 import apiUser from "../../../../utils/api/apiUser.ts";
 import { saveToken, saveUserId } from "../../../../utils/db/secureStore/SecureStore.js";
@@ -238,59 +238,61 @@ function FormSignUp({ visible, onClose, theme, handleSubmit }) {
     }, [email, password, verificationСode, privacyPolicy])
 
     return (
-        <Modal visible={visible} animationType={'slide'} transparent={true} onRequestClose={close}>
-            <BlurView style={styles.blur} intensity={10} blurType='light' />
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.buttonClose} onPress={onClose}>
-                    <Image source={imgArrow} style={styles.imgButtonClose} />
-                </TouchableOpacity>
-                <View style={{ width: '80%', justifyContent: 'center', alignItems: 'center' }}>
-                    {/* ОТПРАВКА КОДА НА ПОЧТУ*/}
-                    {isInputCodeVerificationShow ?
-                        <EmailVerificationCode
-                            email={email} setEmail={setEmail}
-                            sendVerificationCode={sendVerificationCode}
-                            validationEmailText={validationEmailText}
-                            isLoadingEmail={isLoadingEmail}
-                            isValidationForm={isValidationFormEmailVerificationCode}
-                            theme={theme}
-                            localeUser={locale}
-                        />
-                        : <></>}
+        <View>
+            <Modal visible={visible} animationType={'slide'} transparent={true} onRequestClose={close}>
+                <BlurView style={styles.blur} intensity={10} blurType='light' />
+                <View style={styles.container}>
+                    <TouchableOpacity style={styles.buttonClose} onPress={onClose}>
+                        <Image source={imgArrow} style={styles.imgButtonClose} />
+                    </TouchableOpacity>
+                    <View style={{ width: '80%', justifyContent: 'center', alignItems: 'center' }}>
+                        {/* ОТПРАВКА КОДА НА ПОЧТУ*/}
+                        {isInputCodeVerificationShow ?
+                            <EmailVerificationCode
+                                email={email} setEmail={setEmail}
+                                sendVerificationCode={sendVerificationCode}
+                                validationEmailText={validationEmailText}
+                                isLoadingEmail={isLoadingEmail}
+                                isValidationForm={isValidationFormEmailVerificationCode}
+                                theme={theme}
+                                localeUser={locale}
+                            />
+                            : <></>}
 
-                    {/* ОТПРАВИТЬ КОД НА ПРОВЕРКУ */}
-                    {isSendVerificationCode ?
-                        <SenderVerificationCode
-                            updateEmail={updateEmail}
-                            verificateEmail={verificateEmail}
-                            email={email}
-                            verificationСode={verificationСode}
-                            setVerificationСode={setVerificationСode}
-                            isValidationForm={isValidVerificationСode}
-                            validationMessage={validationMessageSenderVerificationCode}
-                            isLoadingSendVerificationCode={isLoadingSendVerificationCode}
-                            theme={theme}
-                        />
-                        : <></>}
-                    {/* Если почта подтверждена */}
-                    {passwordAndSubmit ?
-                        <PasswordAndSubmit
-                            onSubmit={onSubmit}
-                            password={password}
-                            setPassword={setPassword}
-                            isValidationForm={isValidationPassword}
-                            validationPasswordText={validationPasswordText}
-                            validationAccess={validationAccess}
-                            isCheckedPrivacyPolicy={privacyPolicy}
-                            setCheckedPrivacyPolicy={setPrivacyPolicy}
-                            theme={theme}
-                            isLoadingSubmit={isLoadingSignUp}
-                        />
-                        : <></>
-                    }
+                        {/* ОТПРАВИТЬ КОД НА ПРОВЕРКУ */}
+                        {isSendVerificationCode ?
+                            <SenderVerificationCode
+                                updateEmail={updateEmail}
+                                verificateEmail={verificateEmail}
+                                email={email}
+                                verificationСode={verificationСode}
+                                setVerificationСode={setVerificationСode}
+                                isValidationForm={isValidVerificationСode}
+                                validationMessage={validationMessageSenderVerificationCode}
+                                isLoadingSendVerificationCode={isLoadingSendVerificationCode}
+                                theme={theme}
+                            />
+                            : <></>}
+                        {/* Если почта подтверждена */}
+                        {passwordAndSubmit ?
+                            <PasswordAndSubmit
+                                onSubmit={onSubmit}
+                                password={password}
+                                setPassword={setPassword}
+                                isValidationForm={isValidationPassword}
+                                validationPasswordText={validationPasswordText}
+                                validationAccess={validationAccess}
+                                isCheckedPrivacyPolicy={privacyPolicy}
+                                setCheckedPrivacyPolicy={setPrivacyPolicy}
+                                theme={theme}
+                                isLoadingSubmit={isLoadingSignUp}
+                            />
+                            : <></>
+                        }
+                    </View>
                 </View>
-            </View>
-        </Modal >
+            </Modal >
+        </View>
     )
 
 }

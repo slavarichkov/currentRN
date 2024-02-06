@@ -32,6 +32,7 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
     const { selectedTranslations } = useTranslate();
     const { theme, colorText } = useTheme();
 
+    const [isVisible, setIsVisible] = useState(false);
     const [dateOfCounterVerification, setDateOfCounterVerification] = useState<Date>(new Date());
     const [isShowDateOfCounterVerification, setShowdateOfCounterVerification] = useState<boolean>(false);
     const [dateOfCounterVerificationNext, setDateOfCounterVerificationNext] = useState<Date>(new Date());
@@ -157,9 +158,20 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
     }, [dataCounter, cost, dateOfCounterVerification, dateOfCounterVerification, numberCounter, initAdditionalCost, additionalCost])
 
 
+    useEffect(() => {
+        if (isOpen) {
+            setIsVisible(true);
+        } else {
+            setTimeout(()=>{
+                setIsVisible(false);
+            },1000)
+        }
+
+    }, [isOpen])
+
     return (
         <ModalWithChildren
-            isVisible={isOpen}
+            isVisible={isVisible}
             onClose={onClose}
             childComponent={
                 <View style={styles.container}>
@@ -194,45 +206,39 @@ const FormUpdateCounter: React.FC<FormUpdateCounter> = ({
                             colorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
                         />
                     </View >
-                    < View style={styles.containerInput} >
-                        <TextInputWithLabelInside
-                            label={selectedTranslations.cost}
-                            placeholder={selectedTranslations.cost}
-                            value={cost}
-                            onChangeText={getCost}
-                            maxLength={70}
-                            placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
-                            styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
-                            keyboardType={'numeric'}
-                        />
-                    </View >
+                    <TextInputWithLabelInside
+                        label={selectedTranslations.cost}
+                        placeholder={selectedTranslations.cost}
+                        value={cost}
+                        onChangeText={getCost}
+                        maxLength={70}
+                        placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                        styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                        keyboardType={'numeric'}
+                    />
                     {isAdditionalCost ?
                         <>
-                            < View style={styles.containerInput} >
-                                <TextInputWithLabelInside
-                                    label={selectedTranslations.additionalСost}
-                                    placeholder={selectedTranslations.additionalСost}
-                                    value={additionalCost}
-                                    onChangeText={getAdditionalCost}
-                                    maxLength={70}
-                                    placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
-                                    styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
-                                    keyboardType={'numeric'}
-                                />
-                            </View >
-                            < View style={styles.containerInput} >
-                                <TextInputWithLabelInside
-                                    label={selectedTranslations.totalCost}
-                                    placeholder={selectedTranslations.totalCost}
-                                    value={summaryCost}
-                                    onChangeText={setSummaryCost}
-                                    onClickInput={() => { }}
-                                    maxLength={70}
-                                    placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
-                                    styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
-                                    keyboardType={'numeric'}
-                                />
-                            </View >
+                            <TextInputWithLabelInside
+                                label={selectedTranslations.additionalСost}
+                                placeholder={selectedTranslations.additionalСost}
+                                value={additionalCost}
+                                onChangeText={getAdditionalCost}
+                                maxLength={70}
+                                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                keyboardType={'numeric'}
+                            />
+                            <TextInputWithLabelInside
+                                label={selectedTranslations.totalCost}
+                                placeholder={selectedTranslations.totalCost}
+                                value={summaryCost}
+                                onChangeText={setSummaryCost}
+                                onClickInput={() => { }}
+                                maxLength={70}
+                                placeholderTextColor={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                styleColorText={theme === 'light' ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)'}
+                                keyboardType={'numeric'}
+                            />
                         </>
                         : <></>}
                     <View style={styles.buttonSubmit}>
@@ -255,7 +261,7 @@ const styles = StyleSheet.create({
     },
     containerInput: {
         width: '100%',
-        paddingTop: 5,
+        paddingVertical: 3,
     },
     buttonSubmit: {
         width: 170,

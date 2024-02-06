@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, Platform } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
 //Контекст
 import { useTheme } from '../../../contexts/theme/ThemeContext';
@@ -92,8 +92,12 @@ const CountersInfoScreen = ({ navigation }) => {
         setCounters(arrayCounters);
     }
 
-    function onClikNavigationStatisticScreen() {
+    function onClikNavigationStatisticScreen() { 
         navigation.navigate('StatisticsCountersScreen')
+        // Временное решение для android тк компонент не отображается при навигации напрямую
+        if(Platform.OS === 'android') {
+            navigation.navigate('RightScreen')
+        }
     }
 
     // будет выполняться при каждом фокусе на экране

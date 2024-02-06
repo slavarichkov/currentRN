@@ -41,11 +41,11 @@ const HeaderListReadings: React.FC<HeaderComponent> = ({ dataForChart, years, se
 
     const RenderSwitchYearWrapper = useCallback(({ item }) => (
         <RenderSwitchYear
-          item={item}
-          selectedYear={selectedYear}
-          selectYear={selectYear}
+            item={item}
+            selectedYear={selectedYear}
+            selectYear={selectYear}
         />
-      ), [selectedYear, selectYear]);
+    ), [selectedYear, selectYear]);
 
     return (
         <View style={styles.container}>

@@ -9,6 +9,7 @@ import { TypeAddress } from '../../../utils/types/addressTypes';
 import Form from "../Form"
 import CountersSelector from '../../selectors/counters/CountersSelector';
 import TextInputWithLabelInside from '../../Inputs/TextInputWithLabelInside';
+import { TextInput } from 'react-native';
 
 interface FormProps {
     sumbit: (obj: TypeAddress) => void;

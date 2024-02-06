@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, TouchableOpacity, Image, Keyboard, KeyboardAvoidingView } from "react-native";
+import { Modal, TouchableOpacity, Image, Keyboard, KeyboardAvoidingView, LayoutAnimation } from "react-native";
 import { BlurView } from '@react-native-community/blur';
 
 import { useGlobal } from "../../../../contexts/global/GlobalContext";
@@ -269,6 +269,31 @@ function FormRecoveryPassword({ visible, onClose, theme, handleSubmit }) {
             keyboardDidHideListener.remove();
         };
     }, []);
+
+    useEffect(() => {
+        const configureKeyboardLayoutAnimation = () => {
+          LayoutAnimation.configureNext(LayoutAnimation.create(
+            250, // длительность анимации в миллисекундах
+            LayoutAnimation.Types.easeInEaseOut, // тип анимации
+            LayoutAnimation.Properties.opacity, // свойство, по которому происходит анимация
+          ));
+        };
+    
+        const keyboardDidShowListener = Keyboard.addListener(
+          Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
+          configureKeyboardLayoutAnimation
+        );
+    
+        const keyboardDidHideListener = Keyboard.addListener(
+          Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
+          configureKeyboardLayoutAnimation
+        );
+    
+        return () => {
+          keyboardDidShowListener.remove();
+          keyboardDidHideListener.remove();
+        };
+      }, []);
 
     return (
         <Modal visible={visible} animationType={'slide'} transparent={true} onRequestClose={close}>

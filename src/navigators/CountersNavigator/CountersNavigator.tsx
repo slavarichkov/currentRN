@@ -106,8 +106,8 @@ function CountersNavigator() {
                             tabBarIcon: ({ color }) => (
                                 <>
                                     {/* <Image
-                                    source={imgWater} // Указываем путь к PNG-изображению
-                                    style={{ width: 28, height: 28, tintColor: '#87CEEB' }} // Устанавливаем размер и цвет
+                                    source={imgWater} 
+                                    style={{ width: 28, height: 28, tintColor: '#87CEEB' }} 
                                 /> */}
 
                                 </>
@@ -126,8 +126,8 @@ function CountersNavigator() {
                                     tabBarIcon: ({ color }) => (
                                         <>
                                             <Image
-                                                source={counterObj.img} // Указываем путь к PNG-изображению
-                                                style={{ width: 28, height: 28, tintColor: counterObj.colorIndicator }} // Устанавливаем размер и цвет
+                                                source={counterObj.img} 
+                                                style={{ width: 28, height: 28, tintColor: counterObj.colorIndicator }} 
                                             />
 
                                         </>
@@ -147,8 +147,8 @@ function CountersNavigator() {
                             tabBarIcon: ({ color }) => (
                                 <>
                                     <Image
-                                        source={imgList} // Указываем путь к PNG-изображению
-                                        style={{ width: 28, height: 28, tintColor: 'white' }} // Устанавливаем размер и цвет
+                                        source={imgList} 
+                                        style={{ width: 28, height: 28, tintColor: 'white' }} 
                                     />
 
                                 </>

@@ -1,7 +1,7 @@
 //Форма для отправки данных
 
-import React, { ReactNode } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, Image, KeyboardAvoidingView, Platform, LayoutAnimation, Keyboard } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 //Контекст
 import { useTheme } from '../../contexts/theme/ThemeContext';
@@ -42,49 +42,65 @@ const Form: React.FC<FormProps> = ({
   const { selectedTranslations } = useTranslate();
   const { theme, colorText } = useTheme();
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (visible) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false)
+      // const timer = Platform.OS === 'ios' ? 570 : 1;
+      // setTimeout(() => setIsVisible(false), timer);
+    }
+  }, [visible])
+
   return (
-    <Modal
-      animationType={"fade"}
-      transparent={true}
-      visible={visible}
-      onRequestClose={onCloseForm}
-    >
-      {/* Заблюренный задний фон */}
-      <BlurView style={styles.blurBackground} blurType='dark' blurAmount={theme === 'light' ? 5 : 4} />
-      {/* Содержимое модального окна */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.modalContainer}>
-        {/* КНОПКА СВОРАЧИВАНИЯ ФОРМЫ */}
-        <TouchableOpacity onPress={onCloseForm}>
-          <Image source={imgCloseButton} style={styles.closeButton} />
-        </TouchableOpacity>
-        <View style={styles.modalContent}>
-          <Text style={[styles.modalTitle, colorText ]}>{nameForm}</Text>
-          {child}
-          {withoutButton ?
-            <></>
-            :
-            //{/* КНОПКА САБМИТА */ }
-            < TouchableOpacity
-              style={[styles.submitButton, isFormValid ? {} : styles.disabledButton]}
-              onPress={() => {
-                if (isFormValid && !isSubmitLoading) {
-                  sumbit()
-                  // Выполните здесь логику отправки данных
-                }
-              }}
-              disabled={!isFormValid}
-            >
-              {isSubmitLoading ?
-                <Loader />
-                :
-                <Text style={styles.submitButtonText}>{selectedTranslations.formAddSubmitButton}</Text>}
-            </TouchableOpacity>}
-          <Text style={styles.messageValidation}>{messageValidation}</Text>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal >
+    <View>
+      <Modal
+        animationType={"fade"}
+        transparent={true}
+        visible={isVisible}
+        onRequestClose={onCloseForm}
+      >
+        {/* Заблюренный задний фон */}
+        <BlurView style={styles.blurBackground} blurType='dark' blurAmount={theme === 'light' ? 5 : 4} />
+        {/* Содержимое модального окна */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.modalContainer}>
+          {/* КНОПКА СВОРАЧИВАНИЯ ФОРМЫ */}
+          <TouchableOpacity onPress={onCloseForm}>
+            <Image source={imgCloseButton} style={styles.closeButton} />
+          </TouchableOpacity>
+          <View style={styles.modalContent}>
+            <Text style={[styles.modalTitle, colorText]}>{nameForm}</Text>
+            {visible ?
+              child
+              : <></>}
+            {withoutButton ?
+              <></>
+              :
+              //{/* КНОПКА САБМИТА */ }
+              < TouchableOpacity
+                style={[styles.submitButton, isFormValid ? {} : styles.disabledButton]}
+                onPress={() => {
+                  if (isFormValid && !isSubmitLoading) {
+                    sumbit()
+                    // Выполните здесь логику отправки данных
+                  }
+                }}
+                disabled={!isFormValid}
+              >
+                {isSubmitLoading ?
+                  <Loader />
+                  :
+                  <Text style={styles.submitButtonText}>{selectedTranslations.formAddSubmitButton}</Text>}
+              </TouchableOpacity>}
+            <Text style={styles.messageValidation}>{messageValidation}</Text>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal >
+    </View>
   );
 };
 
@@ -113,6 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    //backgroundColor: 'gray',
   },
   modalTitle: {
     color: 'rgba(0,0,0,1)',
