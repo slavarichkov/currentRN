@@ -74,7 +74,7 @@ function Main() {
 
     return (
         <View style={[styles.container, backgroundColor]}>
-            {!isShow ?
+            {isShow ?
                 <Tab.Navigator
                     initialRouteName="CountersScreen" // начальный экран
                     screenOptions={{

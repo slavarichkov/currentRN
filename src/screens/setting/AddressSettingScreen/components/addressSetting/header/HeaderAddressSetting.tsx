@@ -40,7 +40,7 @@ const HeaderAddressSetting = () => {
                 };
 
                 const pushFMCToken = await getFcmToken();
-                
+
                 if (pushFMCToken) {
                     await savePushTokenToAsyncStorage(pushFMCToken);
                     data.pushToken = pushFMCToken;
