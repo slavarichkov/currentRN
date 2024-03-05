@@ -16,7 +16,12 @@ type RenderSwitchYear = {
 }
 
 /** Компонент header у списка статистики показаний счетчиков */
-const HeaderListReadings: React.FC<HeaderComponent> = ({ dataForChart, years, selectedYear, selectYear }) => {
+const HeaderListReadings: React.FC<HeaderComponent> = ({
+    dataForChart,
+    years,
+    selectedYear,
+    selectYear
+}) => {
 
     const [isShowChart, setShowChart] = useState<boolean>(false);
 
